@@ -3,6 +3,9 @@ SSUL
 Copyright (c) 2021-present NAVER Corp.
 MIT License
 """
+import numpy as np
+import random
+import torch
 
 tasks_voc = {
     "offline": {
@@ -52,7 +55,7 @@ tasks_voc = {
         3: [12, 13, 14],
         4: [15, 16, 17],
         5: [18, 19, 20],
-    },   
+    },
     "5-1": {
         0 : [0, 1, 2, 3, 4, 5],
         1 : [6, ],
@@ -70,7 +73,7 @@ tasks_voc = {
         13: [18, ],
         14: [19, ],
         15: [20, ],
-    },   
+    },
     "2-2": {
         0 : [0, 1, 2],
         1 : [3, 4],
@@ -82,7 +85,7 @@ tasks_voc = {
         7 : [15, 16],
         8 : [17, 18],
         9 : [19, 20],
-    },   
+    },
     "2-1":{
         0 : [0, 1, 2],
         1 : [3, ],
@@ -103,7 +106,7 @@ tasks_voc = {
         16: [18, ],
         17: [19, ],
         18: [20, ],
-    },   
+    },
     "15-1_b":{
         0: [0, 12, 9, 20, 7, 15, 8, 14, 16, 5, 19, 4, 1, 13, 2, 11],
         1: [17], 2: [3], 3: [6], 4: [18], 5: [10]
@@ -244,31 +247,31 @@ tasks_ade = {
 
 
 def get_tasks(dataset, task, step=None):
-    
+
     if dataset == 'voc':
         tasks = tasks_voc
     elif dataset == 'ade':
         tasks = tasks_ade
     else:
         NotImplementedError
-        
+
     if step is None:
         return tasks[task].copy()
-    
+
     return tasks[task][step].copy()
 
 
 def get_dataset_list(dataset, task, step, mode, overlap=True):
-    
+
     all_dataset = open(f"datasets/data/{dataset}/{mode}_cls.txt", "r").read().splitlines()
-    
+
     target_cls = get_tasks(dataset, task, step)
-    
+
     if 0 in target_cls:
         target_cls.remove(0)
-    
+
     dataset_list = []
-    
+
     if overlap:
         fil = lambda c: any(x in target_cls for x in classes)
     else:
@@ -276,7 +279,7 @@ def get_dataset_list(dataset, task, step, mode, overlap=True):
         target_cls_cum = target_cls + target_cls_old + [0, 255]
 
         fil = lambda c: any(x in target_cls for x in classes) and all(x in target_cls_cum for x in c)
-    
+
     for idx, classes in enumerate(all_dataset):
         str_split = classes.split(" ")
 
@@ -285,6 +288,28 @@ def get_dataset_list(dataset, task, step, mode, overlap=True):
 
         if fil(classes):
             dataset_list.append(img_name)
-            
-    return dataset_list
+
+    final_data_list = []
+    #####################################################################
+    # final_data_list = dataset_list
+
+    if step > 0:
+        np.random.seed(1234)
+        seed_list = np.random.randint(0, 99999, size=(1,))
+        np.random.seed(seed_list[0])
+        random.seed(seed_list[0])
+        torch.manual_seed(seed_list[0])
+        for _ in range(5):
+            idx = random.choice(dataset_list)
+            while True:
+                if idx not in final_data_list:
+                    final_data_list.append(idx)
+                    break
+                else:
+                    idx = random.choice(dataset_list)
+    else:
+        final_data_list = dataset_list
+    #####################################################################
+
+    return final_data_list
 

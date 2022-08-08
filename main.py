@@ -132,16 +132,17 @@ def get_dataset(opts):
         dataset = ADESegmentation
     else:
         raise NotImplementedError
-        
+
     dataset_dict = {}
+
     dataset_dict['train'] = dataset(opts=opts, image_set='train', transform=train_transform, cil_step=opts.curr_step)
-    
+
     dataset_dict['val'] = dataset(opts=opts,image_set='val', transform=val_transform, cil_step=opts.curr_step)
-    
+
     dataset_dict['test'] = dataset(opts=opts, image_set='test', transform=val_transform, cil_step=opts.curr_step)
-    
+
     if opts.curr_step > 0 and opts.mem_size > 0:
-        dataset_dict['memory'] = dataset(opts=opts, image_set='memory', transform=train_transform, 
+        dataset_dict['memory'] = dataset(opts=opts, image_set='memory', transform=train_transform,
                                                  cil_step=opts.curr_step, mem_size=opts.mem_size)
 
     return dataset_dict
@@ -154,26 +155,26 @@ def validate(opts, model, loader, device, metrics):
 
     with torch.no_grad():
         for i, (images, labels, _, _) in enumerate(loader):
-            
+
             images = images.to(device, dtype=torch.float32, non_blocking=True)
             labels = labels.to(device, dtype=torch.long, non_blocking=True)
-            
+
             outputs = model(images)
-            
+
             if opts.loss_type == 'bce_loss':
                 outputs = torch.sigmoid(outputs)
             else:
                 outputs = torch.softmax(outputs, dim=1)
-                    
+
             # remove unknown label
             if opts.unknown:
                 outputs[:, 1] += outputs[:, 0]
                 outputs = outputs[:, 1:]
-            
+
             preds = outputs.detach().max(dim=1)[1].cpu().numpy()
             targets = labels.cpu().numpy()
             metrics.update(targets, preds)
-                
+
         score = metrics.get_results()
     return score
 
@@ -181,20 +182,20 @@ def validate(opts, model, loader, device, metrics):
 def main(opts):
     os.environ['CUDA_VISIBLE_DEVICES'] = opts.gpu_id
     bn_freeze = opts.bn_freeze if opts.curr_step > 0 else False
-        
+
     target_cls = get_tasks(opts.dataset, opts.task, opts.curr_step)
     opts.num_classes = [len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step+1)]
     if opts.unknown: # re-labeling: [unknown, background, ...]
         opts.num_classes = [1, 1, opts.num_classes[0]-1] + opts.num_classes[1:]
     fg_idx = 1 if opts.unknown else 0
-    
+
     curr_idx = [
-        sum(len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step)), 
+        sum(len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step)),
         sum(len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step+1))
     ]
-    
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
+
     print("==============================================")
     print(f"  task : {opts.task}")
     print(f"  step : {opts.curr_step}")
@@ -207,7 +208,7 @@ def main(opts):
     torch.manual_seed(opts.random_seed)
     np.random.seed(opts.random_seed)
     random.seed(opts.random_seed)
-    
+
     # Set up model
     model_map = {
         'deeplabv3_resnet50': network.deeplabv3_resnet50,
@@ -222,7 +223,7 @@ def main(opts):
     if opts.separable_conv and 'plus' in opts.model:
         network.convert_to_separable_conv(model.classifier)
     utils.set_bn_momentum(model.backbone, momentum=0.01)
-        
+
     if opts.curr_step > 0:
         """ load previous model """
         model_prev = model_map[opts.model](num_classes=opts.num_classes[:-1], output_stride=opts.output_stride, bn_freeze=bn_freeze)
@@ -231,12 +232,12 @@ def main(opts):
         utils.set_bn_momentum(model_prev.backbone, momentum=0.01)
     else:
         model_prev = None
-    
+
     # Set up metrics
     metrics = StreamSegMetrics(sum(opts.num_classes)-1 if opts.unknown else sum(opts.num_classes), dataset=opts.dataset)
 
     print(model.classifier.head)
-    
+
     # Set up optimizer & parameters
     if opts.freeze and opts.curr_step > 0:
         for param in model_prev.parameters():
@@ -247,34 +248,34 @@ def main(opts):
 
         for param in model.classifier.head[-1].parameters(): # classifier for new class
             param.requires_grad = True
-            
+
         training_params = [{'params': model.classifier.head[-1].parameters(), 'lr': opts.lr}]
-            
+
         if opts.unknown:
             for param in model.classifier.head[0].parameters(): # unknown
                 param.requires_grad = True
             training_params.append({'params': model.classifier.head[0].parameters(), 'lr': opts.lr})
-            
+
             for param in model.classifier.head[1].parameters(): # background
                 param.requires_grad = True
             training_params.append({'params': model.classifier.head[1].parameters(), 'lr': opts.lr*1e-4})
-        
+
     else:
         training_params = [{'params': model.backbone.parameters(), 'lr': 0.001},
                            {'params': model.classifier.parameters(), 'lr': 0.01}]
-        
-    optimizer = torch.optim.SGD(params=training_params, 
-                                lr=opts.lr, 
-                                momentum=0.9, 
+
+    optimizer = torch.optim.SGD(params=training_params,
+                                lr=opts.lr,
+                                momentum=0.9,
                                 weight_decay=opts.weight_decay,
                                 nesterov=True)
-    
+
     print("----------- trainable parameters --------------")
     for name, param in model.named_parameters():
         if param.requires_grad:
             print(name, param.shape)
     print("-----------------------------------------------")
-    
+
     def save_ckpt(path):
         torch.save({
             "model_state": model.module.state_dict(),
@@ -282,25 +283,25 @@ def main(opts):
             "best_score": best_score,
         }, path)
         print("Model saved as %s" % path)
-    
+
     utils.mkdir('checkpoints')
     # Restore
     best_score = -1
     cur_itrs = 0
     cur_epochs = 0
-    
+
     if opts.overlap:
         ckpt_str = "checkpoints/%s_%s_%s_step_%d_overlap.pth"
     else:
         ckpt_str = "checkpoints/%s_%s_%s_step_%d_disjoint.pth"
-    
+
     if opts.curr_step > 0: # previous step checkpoint
         opts.ckpt = ckpt_str % (opts.model, opts.dataset, opts.task, opts.curr_step-1)
-        
+
     if opts.ckpt is not None and os.path.isfile(opts.ckpt):
         checkpoint = torch.load(opts.ckpt, map_location=torch.device('cpu'))["model_state"]
         model_prev.load_state_dict(checkpoint, strict=True)
-        
+
         if opts.unknown and opts.w_transfer:
             # weight transfer : from unknonw to new-class
             print("... weight transfer")
@@ -331,7 +332,7 @@ def main(opts):
     model = nn.DataParallel(model)
     mode = model.to(device)
     mode.train()
-    
+
     if opts.curr_step > 0:
         model_prev = nn.DataParallel(model_prev)
         model_prev = model_prev.to(device)
@@ -339,11 +340,16 @@ def main(opts):
 
         if opts.mem_size > 0:
             memory_sampling_balanced(opts, model_prev)
-            
+
         # Setup dataloader
     if not opts.crop_val:
         opts.val_batch_size = 1
-    
+
+########################################################################
+    if opts.curr_step > 0:
+        opts.batch_size = 1
+###########################################################################
+
     dataset_dict = get_dataset(opts)
     train_loader = data.DataLoader(
         dataset_dict['train'], batch_size=opts.batch_size, shuffle=True, num_workers=4, pin_memory=True, drop_last=True)
@@ -351,24 +357,25 @@ def main(opts):
         dataset_dict['val'], batch_size=opts.val_batch_size, shuffle=False, num_workers=4, pin_memory=True)
     test_loader = data.DataLoader(
         dataset_dict['test'], batch_size=opts.val_batch_size, shuffle=False, num_workers=4, pin_memory=True)
-    
+
     print("Dataset: %s, Train set: %d, Val set: %d, Test set: %d" %
           (opts.dataset, len(dataset_dict['train']), len(dataset_dict['val']), len(dataset_dict['test'])))
-    
+
     if opts.curr_step > 0 and opts.mem_size > 0:
         memory_loader = data.DataLoader(
             dataset_dict['memory'], batch_size=opts.batch_size, shuffle=True, num_workers=4, pin_memory=True, drop_last=True)
-    
+
     total_itrs = opts.train_epoch * len(train_loader)
+
     val_interval = max(100, total_itrs // 100)
     print(f"... train epoch : {opts.train_epoch} , iterations : {total_itrs} , val_interval : {val_interval}")
-        
+
     #==========   Train Loop   ==========#
     if opts.test_only:
         model.eval()
-        test_score = validate(opts=opts, model=model, loader=test_loader, 
+        test_score = validate(opts=opts, model=model, loader=test_loader,
                               device=device, metrics=metrics)
-        
+
         print(metrics.to_str(test_score))
         class_iou = list(test_score['Class IoU'].values())
         class_acc = list(test_score['Class Acc'].values())
@@ -394,23 +401,23 @@ def main(opts):
     elif opts.loss_type == 'ce_loss':
         criterion = nn.CrossEntropyLoss(ignore_index=255, reduction='mean')
     elif opts.loss_type == 'bce_loss':
-        criterion = utils.BCEWithLogitsLossWithIgnoreIndex(ignore_index=255, 
+        criterion = utils.BCEWithLogitsLossWithIgnoreIndex(ignore_index=255,
                                                            reduction='mean')
-        
+
     scaler = torch.cuda.amp.GradScaler(enabled=opts.amp)
-    
+
     avg_loss = AverageMeter()
     avg_time = AverageMeter()
-    
+
     model.train()
     save_ckpt(ckpt_str % (opts.model, opts.dataset, opts.task, opts.curr_step))
-    
+
     # =====  Train  =====
     while cur_itrs < total_itrs:
         cur_itrs += 1
         optimizer.zero_grad()
         end_time = time.time()
-        
+
         """ data load """
         try:
             images, labels, sal_maps, _ = train_iter.next()
@@ -420,11 +427,11 @@ def main(opts):
             cur_epochs += 1
             avg_loss.reset()
             avg_time.reset()
-            
+
         images = images.to(device, dtype=torch.float32, non_blocking=True)
         labels = labels.to(device, dtype=torch.long, non_blocking=True)
         sal_maps = sal_maps.to(device, dtype=torch.long, non_blocking=True)
-            
+
         """ memory """
         if opts.curr_step > 0 and opts.mem_size > 0:
             try:
@@ -436,13 +443,13 @@ def main(opts):
             m_images = m_images.to(device, dtype=torch.float32, non_blocking=True)
             m_labels = m_labels.to(device, dtype=torch.long, non_blocking=True)
             m_sal_maps = m_sal_maps.to(device, dtype=torch.long, non_blocking=True)
-            
+
             rand_index = torch.randperm(opts.batch_size)[:opts.batch_size // 2].cuda()
             images[rand_index, ...] = m_images[rand_index, ...]
             labels[rand_index, ...] = m_labels[rand_index, ...]
             sal_maps[rand_index, ...] = m_sal_maps[rand_index, ...]
 
-        
+
         """ forwarding and optimization """
         with torch.cuda.amp.autocast(enabled=opts.amp):
 
@@ -457,12 +464,12 @@ def main(opts):
                     pred_prob = torch.sigmoid(outputs_prev).detach()
                 else:
                     pred_prob = torch.softmax(outputs_prev, 1).detach()
-                    
+
                 pred_scores, pred_labels = torch.max(pred_prob, dim=1)
-                pseudo_labels = torch.where( (labels <= fg_idx) & (pred_labels > fg_idx) & (pred_scores >= opts.pseudo_thresh), 
-                                            pred_labels, 
+                pseudo_labels = torch.where( (labels <= fg_idx) & (pred_labels > fg_idx) & (pred_scores >= opts.pseudo_thresh),
+                                            pred_labels,
                                             labels)
-                    
+
                 loss = criterion(outputs, pseudo_labels)
             else:
                 loss = criterion(outputs, labels)
@@ -478,24 +485,24 @@ def main(opts):
 
         if (cur_itrs) % 10 == 0:
             print("[%s / step %d] Epoch %d, Itrs %d/%d, Loss=%6f, Time=%.2f , LR=%.8f" %
-                  (opts.task, opts.curr_step, cur_epochs, cur_itrs, total_itrs, 
+                  (opts.task, opts.curr_step, cur_epochs, cur_itrs, total_itrs,
                    avg_loss.avg, avg_time.avg*1000, optimizer.param_groups[0]['lr']))
 
         if val_interval > 0 and (cur_itrs) % val_interval == 0:
             print("validation...")
             model.eval()
-            val_score = validate(opts=opts, model=model, loader=val_loader, 
+            val_score = validate(opts=opts, model=model, loader=val_loader,
                                  device=device, metrics=metrics)
             print(metrics.to_str(val_score))
-            
+
             model.train()
-            
+
             class_iou = list(val_score['Class IoU'].values())
             val_score = np.mean( class_iou[curr_idx[0]:curr_idx[1]] + [class_iou[0]])
             curr_score = np.mean( class_iou[curr_idx[0]:curr_idx[1]] )
             print("curr_val_score : %.4f" % (curr_score))
             print()
-            
+
             if curr_score > best_score:  # save best model
                 print("... save best ckpt : ", curr_score)
                 best_score = curr_score
@@ -503,16 +510,16 @@ def main(opts):
 
 
     print("... Training Done")
-    
+
     if opts.curr_step > 0:
         print("... Testing Best Model")
         best_ckpt = ckpt_str % (opts.model, opts.dataset, opts.task, opts.curr_step)
-        
+
         checkpoint = torch.load(best_ckpt, map_location=torch.device('cpu'))
         model.module.load_state_dict(checkpoint["model_state"], strict=True)
         model.eval()
-        
-        test_score = validate(opts=opts, model=model, loader=test_loader, 
+
+        test_score = validate(opts=opts, model=model, loader=test_loader,
                               device=device, metrics=metrics)
         print(metrics.to_str(test_score))
 
@@ -527,12 +534,16 @@ def main(opts):
 
 
 if __name__ == '__main__':
-            
+    # print(os.getcwd())
+    # torch.backends.cudnn.benchmark = False
+    # torch.backends.cudnn.enabled = False
+
     opts = get_argparser().parse_args()
-        
+    #####################################################################
     start_step = 0
+    #####################################################################
     total_step = len(get_tasks(opts.dataset, opts.task))
-    
+
     for step in range(start_step, total_step):
         opts.curr_step = step
         main(opts)

@@ -55,28 +55,28 @@ class VOCSegmentation(data.Dataset):
         
         self.image_set = image_set
         self.transform = transform
-        
+
         voc_root = './datasets/data/voc'
         image_dir = os.path.join(self.root, 'JPEGImages')
 
         if not os.path.isdir(self.root):
             raise RuntimeError('Dataset not found or corrupted.')
-        
+
         mask_dir = os.path.join(self.root, 'SegmentationClassAug')
         salmap_dir = os.path.join(self.root, 'saliency_map')
         assert os.path.exists(mask_dir), "SegmentationClassAug not found, please refer to README.md and prepare it manually"
-            
+
         self.target_cls = get_tasks('voc', self.task, cil_step)
         self.target_cls += [255] # including ignore index (255)
-        
+
         if image_set=='test':
             file_names = open(os.path.join(self.root, 'ImageSets/Segmentation', 'val.txt'), 'r')
             file_names = file_names.read().splitlines()
-            
+
         elif image_set == 'memory':
             for s in range(cil_step):
                 self.target_cls += get_tasks('voc', self.task, s)
-            
+
             memory_json = os.path.join(voc_root, 'memory.json')
 
             with open(memory_json, "r") as json_file:
@@ -84,13 +84,13 @@ class VOCSegmentation(data.Dataset):
 
             file_names = memory_list[f"step_{cil_step}"]["memory_list"]
             print("... memory list : ", len(file_names), self.target_cls)
-            
+
             while len(file_names) < opts.batch_size:
                 file_names = file_names * 2
 
         else:
             file_names = get_dataset_list('voc', self.task, cil_step, image_set, self.overlap)
-            
+
         self.images = [os.path.join(image_dir, x + ".jpg") for x in file_names]
         self.masks = [os.path.join(mask_dir, x + ".png") for x in file_names]
         self.sal_maps = [os.path.join(salmap_dir, x + ".png") for x in file_names]
