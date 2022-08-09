@@ -261,7 +261,7 @@ def get_tasks(dataset, task, step=None):
     return tasks[task][step].copy()
 
 
-def get_dataset_list(dataset, task, step, mode, overlap=True):
+def get_dataset_list(dataset, task, step, mode, overlap=True, few_shot=False, num_shot=5):
 
     all_dataset = open(f"datasets/data/{dataset}/{mode}_cls.txt", "r").read().splitlines()
 
@@ -291,25 +291,25 @@ def get_dataset_list(dataset, task, step, mode, overlap=True):
 
     final_data_list = []
     #####################################################################
-    # final_data_list = dataset_list
-
-    if step > 0:
-        np.random.seed(1234)
-        seed_list = np.random.randint(0, 99999, size=(1,))
-        np.random.seed(seed_list[0])
-        random.seed(seed_list[0])
-        torch.manual_seed(seed_list[0])
-        for _ in range(5):
-            idx = random.choice(dataset_list)
-            while True:
-                if idx not in final_data_list:
-                    final_data_list.append(idx)
-                    break
-                else:
-                    idx = random.choice(dataset_list)
-    else:
+    if not few_shot:
         final_data_list = dataset_list
+    else:
+        if step > 0:
+            np.random.seed(1234)
+            seed_list = np.random.randint(0, 99999, size=(1,))
+            np.random.seed(seed_list[0])
+            random.seed(seed_list[0])
+            torch.manual_seed(seed_list[0])
+            for _ in range(num_shot):
+                idx = random.choice(dataset_list)
+                while True:
+                    if idx not in final_data_list:
+                        final_data_list.append(idx)
+                        break
+                    else:
+                        idx = random.choice(dataset_list)
+        else:
+            final_data_list = dataset_list
     #####################################################################
 
     return final_data_list
-

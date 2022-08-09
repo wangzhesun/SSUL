@@ -31,25 +31,31 @@ import matplotlib.pyplot as plt
 
 torch.backends.cudnn.benchmark = True
 
+
 def get_argparser():
     parser = argparse.ArgumentParser()
 
     # Datset Options
     parser.add_argument("--data_root", type=str, default='/data/DB/VOC2012',
                         help="path to Dataset")
-    parser.add_argument("--dataset", type=str, default='voc', choices=['voc', 'ade'], help='Name of dataset')
+    parser.add_argument("--dataset", type=str, default='voc', choices=['voc', 'ade'],
+                        help='Name of dataset')
     parser.add_argument("--num_classes", type=int, default=None, help="num classes (default: None)")
 
     # Deeplab Options
     parser.add_argument("--model", type=str, default='deeplabv3_resnet101',
-                        choices=['deeplabv3_resnet50',  'deeplabv3plus_resnet50',
+                        choices=['deeplabv3_resnet50', 'deeplabv3plus_resnet50',
                                  'deeplabv3_resnet101', 'deeplabv3plus_resnet101',
-                                 'deeplabv3_mobilenet', 'deeplabv3plus_mobilenet'], help='model name')
+                                 'deeplabv3_mobilenet', 'deeplabv3plus_mobilenet'],
+                        help='model name')
     parser.add_argument("--separable_conv", action='store_true', default=False,
                         help="apply separable conv to decoder and aspp")
     parser.add_argument("--output_stride", type=int, default=16, choices=[8, 16])
 
     # Train Options
+    parser.add_argument("--few_shot", type=bool, default=False)
+    parser.add_argument("--num_shot", type=int, default=5)
+    parser.add_argument("--start_step", type=int, default=0)
     parser.add_argument("--amp", action='store_true', default=False)
     parser.add_argument("--test_only", action='store_true', default=False)
     parser.add_argument("--train_epoch", type=int, default=50,
@@ -57,7 +63,8 @@ def get_argparser():
     parser.add_argument("--curr_itrs", type=int, default=0)
     parser.add_argument("--lr", type=float, default=0.01,
                         help="learning rate (default: 0.01)")
-    parser.add_argument("--lr_policy", type=str, default='warm_poly', choices=['poly', 'step', 'warm_poly'],
+    parser.add_argument("--lr_policy", type=str, default='warm_poly',
+                        choices=['poly', 'step', 'warm_poly'],
                         help="learning rate scheduler")
     parser.add_argument("--step_size", type=int, default=10000)
     parser.add_argument("--crop_val", action='store_true', default=False,
@@ -67,7 +74,7 @@ def get_argparser():
     parser.add_argument("--val_batch_size", type=int, default=4,
                         help='batch size for validation (default: 4)')
     parser.add_argument("--crop_size", type=int, default=513)
-    
+
     parser.add_argument("--ckpt", default=None, type=str,
                         help="restore from checkpoint")
 
@@ -83,27 +90,30 @@ def get_argparser():
                         help="print interval of loss (default: 10)")
     parser.add_argument("--val_interval", type=int, default=100,
                         help="epoch interval for eval (default: 100)")
-    
+
     # CIL options
     parser.add_argument("--pseudo", action='store_true', help="enable pseudo-labeling")
-    parser.add_argument("--pseudo_thresh", type=float, default=0.7, help="confidence threshold for pseudo-labeling")
+    parser.add_argument("--pseudo_thresh", type=float, default=0.7,
+                        help="confidence threshold for pseudo-labeling")
     parser.add_argument("--task", type=str, default='15-1', help="cil task")
     parser.add_argument("--curr_step", type=int, default=0)
-    parser.add_argument("--overlap", action='store_true', help="overlap setup (True), disjoint setup (False)")
+    parser.add_argument("--overlap", action='store_true',
+                        help="overlap setup (True), disjoint setup (False)")
     parser.add_argument("--mem_size", type=int, default=0, help="size of examplar memory")
     parser.add_argument("--freeze", action='store_true', help="enable network freezing")
     parser.add_argument("--bn_freeze", action='store_true', help="enable batchnorm freezing")
     parser.add_argument("--w_transfer", action='store_true', help="enable weight transfer")
     parser.add_argument("--unknown", action='store_true', help="enable unknown modeling")
-    
+
     return parser
+
 
 def get_dataset(opts):
     """ Dataset And Augmentation
     """
-    
+
     train_transform = et.ExtCompose([
-        #et.ExtResize(size=opts.crop_size),
+        # et.ExtResize(size=opts.crop_size),
         et.ExtRandomScale((0.5, 2.0)),
         et.ExtRandomCrop(size=(opts.crop_size, opts.crop_size), pad_if_needed=True),
         et.ExtRandomHorizontalFlip(),
@@ -125,7 +135,7 @@ def get_dataset(opts):
             et.ExtNormalize(mean=[0.485, 0.456, 0.406],
                             std=[0.229, 0.224, 0.225]),
         ])
-        
+
     if opts.dataset == 'voc':
         dataset = VOCSegmentation
     elif opts.dataset == 'ade':
@@ -135,15 +145,18 @@ def get_dataset(opts):
 
     dataset_dict = {}
 
-    dataset_dict['train'] = dataset(opts=opts, image_set='train', transform=train_transform, cil_step=opts.curr_step)
+    dataset_dict['train'] = dataset(opts=opts, image_set='train', transform=train_transform,
+                                    cil_step=opts.curr_step)
 
-    dataset_dict['val'] = dataset(opts=opts,image_set='val', transform=val_transform, cil_step=opts.curr_step)
+    dataset_dict['val'] = dataset(opts=opts, image_set='val', transform=val_transform,
+                                  cil_step=opts.curr_step)
 
-    dataset_dict['test'] = dataset(opts=opts, image_set='test', transform=val_transform, cil_step=opts.curr_step)
+    dataset_dict['test'] = dataset(opts=opts, image_set='test', transform=val_transform,
+                                   cil_step=opts.curr_step)
 
     if opts.curr_step > 0 and opts.mem_size > 0:
         dataset_dict['memory'] = dataset(opts=opts, image_set='memory', transform=train_transform,
-                                                 cil_step=opts.curr_step, mem_size=opts.mem_size)
+                                         cil_step=opts.curr_step, mem_size=opts.mem_size)
 
     return dataset_dict
 
@@ -184,14 +197,15 @@ def main(opts):
     bn_freeze = opts.bn_freeze if opts.curr_step > 0 else False
 
     target_cls = get_tasks(opts.dataset, opts.task, opts.curr_step)
-    opts.num_classes = [len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step+1)]
-    if opts.unknown: # re-labeling: [unknown, background, ...]
-        opts.num_classes = [1, 1, opts.num_classes[0]-1] + opts.num_classes[1:]
+    opts.num_classes = [len(get_tasks(opts.dataset, opts.task, step)) for step in
+                        range(opts.curr_step + 1)]
+    if opts.unknown:  # re-labeling: [unknown, background, ...]
+        opts.num_classes = [1, 1, opts.num_classes[0] - 1] + opts.num_classes[1:]
     fg_idx = 1 if opts.unknown else 0
 
     curr_idx = [
         sum(len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step)),
-        sum(len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step+1))
+        sum(len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step + 1))
     ]
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -200,7 +214,7 @@ def main(opts):
     print(f"  task : {opts.task}")
     print(f"  step : {opts.curr_step}")
     print("  Device: %s" % device)
-    print( "  opts : ")
+    print("  opts : ")
     print(opts)
     print("==============================================")
 
@@ -219,14 +233,16 @@ def main(opts):
         'deeplabv3plus_mobilenet': network.deeplabv3plus_mobilenet
     }
 
-    model = model_map[opts.model](num_classes=opts.num_classes, output_stride=opts.output_stride, bn_freeze=bn_freeze)
+    model = model_map[opts.model](num_classes=opts.num_classes, output_stride=opts.output_stride,
+                                  bn_freeze=bn_freeze)
     if opts.separable_conv and 'plus' in opts.model:
         network.convert_to_separable_conv(model.classifier)
     utils.set_bn_momentum(model.backbone, momentum=0.01)
 
     if opts.curr_step > 0:
         """ load previous model """
-        model_prev = model_map[opts.model](num_classes=opts.num_classes[:-1], output_stride=opts.output_stride, bn_freeze=bn_freeze)
+        model_prev = model_map[opts.model](num_classes=opts.num_classes[:-1],
+                                           output_stride=opts.output_stride, bn_freeze=bn_freeze)
         if opts.separable_conv and 'plus' in opts.model:
             network.convert_to_separable_conv(model_prev.classifier)
         utils.set_bn_momentum(model_prev.backbone, momentum=0.01)
@@ -234,7 +250,8 @@ def main(opts):
         model_prev = None
 
     # Set up metrics
-    metrics = StreamSegMetrics(sum(opts.num_classes)-1 if opts.unknown else sum(opts.num_classes), dataset=opts.dataset)
+    metrics = StreamSegMetrics(sum(opts.num_classes) - 1 if opts.unknown else sum(opts.num_classes),
+                               dataset=opts.dataset)
 
     print(model.classifier.head)
 
@@ -246,19 +263,20 @@ def main(opts):
         for param in model.parameters():
             param.requires_grad = False
 
-        for param in model.classifier.head[-1].parameters(): # classifier for new class
+        for param in model.classifier.head[-1].parameters():  # classifier for new class
             param.requires_grad = True
 
         training_params = [{'params': model.classifier.head[-1].parameters(), 'lr': opts.lr}]
 
         if opts.unknown:
-            for param in model.classifier.head[0].parameters(): # unknown
+            for param in model.classifier.head[0].parameters():  # unknown
                 param.requires_grad = True
             training_params.append({'params': model.classifier.head[0].parameters(), 'lr': opts.lr})
 
-            for param in model.classifier.head[1].parameters(): # background
+            for param in model.classifier.head[1].parameters():  # background
                 param.requires_grad = True
-            training_params.append({'params': model.classifier.head[1].parameters(), 'lr': opts.lr*1e-4})
+            training_params.append(
+                {'params': model.classifier.head[1].parameters(), 'lr': opts.lr * 1e-4})
 
     else:
         training_params = [{'params': model.backbone.parameters(), 'lr': 0.001},
@@ -295,8 +313,8 @@ def main(opts):
     else:
         ckpt_str = "checkpoints/%s_%s_%s_step_%d_disjoint.pth"
 
-    if opts.curr_step > 0: # previous step checkpoint
-        opts.ckpt = ckpt_str % (opts.model, opts.dataset, opts.task, opts.curr_step-1)
+    if opts.curr_step > 0:  # previous step checkpoint
+        opts.ckpt = ckpt_str % (opts.model, opts.dataset, opts.task, opts.curr_step - 1)
 
     if opts.ckpt is not None and os.path.isfile(opts.ckpt):
         checkpoint = torch.load(opts.ckpt, map_location=torch.device('cpu'))["model_state"]
@@ -307,11 +325,16 @@ def main(opts):
             print("... weight transfer")
             curr_head_num = len(model.classifier.head) - 1
 
-            checkpoint[f"classifier.head.{curr_head_num}.0.weight"] = checkpoint["classifier.head.0.0.weight"]
-            checkpoint[f"classifier.head.{curr_head_num}.1.weight"] = checkpoint["classifier.head.0.1.weight"]
-            checkpoint[f"classifier.head.{curr_head_num}.1.bias"] = checkpoint["classifier.head.0.1.bias"]
-            checkpoint[f"classifier.head.{curr_head_num}.1.running_mean"] = checkpoint["classifier.head.0.1.running_mean"]
-            checkpoint[f"classifier.head.{curr_head_num}.1.running_var"] = checkpoint["classifier.head.0.1.running_var"]
+            checkpoint[f"classifier.head.{curr_head_num}.0.weight"] = checkpoint[
+                "classifier.head.0.0.weight"]
+            checkpoint[f"classifier.head.{curr_head_num}.1.weight"] = checkpoint[
+                "classifier.head.0.1.weight"]
+            checkpoint[f"classifier.head.{curr_head_num}.1.bias"] = checkpoint[
+                "classifier.head.0.1.bias"]
+            checkpoint[f"classifier.head.{curr_head_num}.1.running_mean"] = checkpoint[
+                "classifier.head.0.1.running_mean"]
+            checkpoint[f"classifier.head.{curr_head_num}.1.running_var"] = checkpoint[
+                "classifier.head.0.1.running_var"]
 
             last_conv_weight = model.state_dict()[f"classifier.head.{curr_head_num}.3.weight"]
             last_conv_bias = model.state_dict()[f"classifier.head.{curr_head_num}.3.bias"]
@@ -345,32 +368,38 @@ def main(opts):
     if not opts.crop_val:
         opts.val_batch_size = 1
 
-########################################################################
-    if opts.curr_step > 0:
+    ########################################################################
+    if opts.few_shot and opts.curr_step > 0:
         opts.batch_size = 1
-###########################################################################
+    ###########################################################################
 
     dataset_dict = get_dataset(opts)
     train_loader = data.DataLoader(
-        dataset_dict['train'], batch_size=opts.batch_size, shuffle=True, num_workers=4, pin_memory=True, drop_last=True)
+        dataset_dict['train'], batch_size=opts.batch_size, shuffle=True, num_workers=4,
+        pin_memory=True, drop_last=True)
     val_loader = data.DataLoader(
-        dataset_dict['val'], batch_size=opts.val_batch_size, shuffle=False, num_workers=4, pin_memory=True)
+        dataset_dict['val'], batch_size=opts.val_batch_size, shuffle=False, num_workers=4,
+        pin_memory=True)
     test_loader = data.DataLoader(
-        dataset_dict['test'], batch_size=opts.val_batch_size, shuffle=False, num_workers=4, pin_memory=True)
+        dataset_dict['test'], batch_size=opts.val_batch_size, shuffle=False, num_workers=4,
+        pin_memory=True)
 
     print("Dataset: %s, Train set: %d, Val set: %d, Test set: %d" %
-          (opts.dataset, len(dataset_dict['train']), len(dataset_dict['val']), len(dataset_dict['test'])))
+          (opts.dataset, len(dataset_dict['train']), len(dataset_dict['val']),
+           len(dataset_dict['test'])))
 
     if opts.curr_step > 0 and opts.mem_size > 0:
         memory_loader = data.DataLoader(
-            dataset_dict['memory'], batch_size=opts.batch_size, shuffle=True, num_workers=4, pin_memory=True, drop_last=True)
+            dataset_dict['memory'], batch_size=opts.batch_size, shuffle=True, num_workers=4,
+            pin_memory=True, drop_last=True)
 
     total_itrs = opts.train_epoch * len(train_loader)
 
     val_interval = max(100, total_itrs // 100)
-    print(f"... train epoch : {opts.train_epoch} , iterations : {total_itrs} , val_interval : {val_interval}")
+    print(
+        f"... train epoch : {opts.train_epoch} , iterations : {total_itrs} , val_interval : {val_interval}")
 
-    #==========   Train Loop   ==========#
+    # ==========   Train Loop   ==========#
     if opts.test_only:
         model.eval()
         test_score = validate(opts=opts, model=model, loader=test_loader,
@@ -380,19 +409,23 @@ def main(opts):
         class_iou = list(test_score['Class IoU'].values())
         class_acc = list(test_score['Class Acc'].values())
 
-        first_cls = len(get_tasks(opts.dataset, opts.task, 0)) # 15-1 task -> first_cls=16
-        print(f"...from 0 to {first_cls-1} : best/test_before_mIoU : %.6f" % np.mean(class_iou[:first_cls]))
-        print(f"...from {first_cls} to {len(class_iou)-1} best/test_after_mIoU : %.6f" % np.mean(class_iou[first_cls:]))
-        print(f"...from 0 to {first_cls-1} : best/test_before_acc : %.6f" % np.mean(class_acc[:first_cls]))
-        print(f"...from {first_cls} to {len(class_iou)-1} best/test_after_acc : %.6f" % np.mean(class_acc[first_cls:]))
+        first_cls = len(get_tasks(opts.dataset, opts.task, 0))  # 15-1 task -> first_cls=16
+        print(f"...from 0 to {first_cls - 1} : best/test_before_mIoU : %.6f" % np.mean(
+            class_iou[:first_cls]))
+        print(f"...from {first_cls} to {len(class_iou) - 1} best/test_after_mIoU : %.6f" % np.mean(
+            class_iou[first_cls:]))
+        print(f"...from 0 to {first_cls - 1} : best/test_before_acc : %.6f" % np.mean(
+            class_acc[:first_cls]))
+        print(f"...from {first_cls} to {len(class_iou) - 1} best/test_after_acc : %.6f" % np.mean(
+            class_acc[first_cls:]))
         return
 
-    if opts.lr_policy=='poly':
+    if opts.lr_policy == 'poly':
         scheduler = utils.PolyLR(optimizer, total_itrs, power=0.9)
-    elif opts.lr_policy=='step':
+    elif opts.lr_policy == 'step':
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=opts.step_size, gamma=0.1)
-    elif opts.lr_policy=='warm_poly':
-        warmup_iters = int(total_itrs*0.1)
+    elif opts.lr_policy == 'warm_poly':
+        warmup_iters = int(total_itrs * 0.1)
         scheduler = utils.WarmupPolyLR(optimizer, total_itrs, warmup_iters=warmup_iters, power=0.9)
 
     # Set up criterion
@@ -449,7 +482,6 @@ def main(opts):
             labels[rand_index, ...] = m_labels[rand_index, ...]
             sal_maps[rand_index, ...] = m_sal_maps[rand_index, ...]
 
-
         """ forwarding and optimization """
         with torch.cuda.amp.autocast(enabled=opts.amp):
 
@@ -466,7 +498,8 @@ def main(opts):
                     pred_prob = torch.softmax(outputs_prev, 1).detach()
 
                 pred_scores, pred_labels = torch.max(pred_prob, dim=1)
-                pseudo_labels = torch.where( (labels <= fg_idx) & (pred_labels > fg_idx) & (pred_scores >= opts.pseudo_thresh),
+                pseudo_labels = torch.where((labels <= fg_idx) & (pred_labels > fg_idx) & (
+                            pred_scores >= opts.pseudo_thresh),
                                             pred_labels,
                                             labels)
 
@@ -486,7 +519,7 @@ def main(opts):
         if (cur_itrs) % 10 == 0:
             print("[%s / step %d] Epoch %d, Itrs %d/%d, Loss=%6f, Time=%.2f , LR=%.8f" %
                   (opts.task, opts.curr_step, cur_epochs, cur_itrs, total_itrs,
-                   avg_loss.avg, avg_time.avg*1000, optimizer.param_groups[0]['lr']))
+                   avg_loss.avg, avg_time.avg * 1000, optimizer.param_groups[0]['lr']))
 
         if val_interval > 0 and (cur_itrs) % val_interval == 0:
             print("validation...")
@@ -498,8 +531,8 @@ def main(opts):
             model.train()
 
             class_iou = list(val_score['Class IoU'].values())
-            val_score = np.mean( class_iou[curr_idx[0]:curr_idx[1]] + [class_iou[0]])
-            curr_score = np.mean( class_iou[curr_idx[0]:curr_idx[1]] )
+            val_score = np.mean(class_iou[curr_idx[0]:curr_idx[1]] + [class_iou[0]])
+            curr_score = np.mean(class_iou[curr_idx[0]:curr_idx[1]])
             print("curr_val_score : %.4f" % (curr_score))
             print()
 
@@ -507,7 +540,6 @@ def main(opts):
                 print("... save best ckpt : ", curr_score)
                 best_score = curr_score
                 save_ckpt(ckpt_str % (opts.model, opts.dataset, opts.task, opts.curr_step))
-
 
     print("... Training Done")
 
@@ -527,10 +559,14 @@ def main(opts):
         class_acc = list(test_score['Class Acc'].values())
         first_cls = len(get_tasks(opts.dataset, opts.task, 0))
 
-        print(f"...from 0 to {first_cls-1} : best/test_before_mIoU : %.6f" % np.mean(class_iou[:first_cls]))
-        print(f"...from {first_cls} to {len(class_iou)-1} best/test_after_mIoU : %.6f" % np.mean(class_iou[first_cls:]))
-        print(f"...from 0 to {first_cls-1} : best/test_before_acc : %.6f" % np.mean(class_acc[:first_cls]))
-        print(f"...from {first_cls} to {len(class_iou)-1} best/test_after_acc : %.6f" % np.mean(class_acc[first_cls:]))
+        print(f"...from 0 to {first_cls - 1} : best/test_before_mIoU : %.6f" % np.mean(
+            class_iou[:first_cls]))
+        print(f"...from {first_cls} to {len(class_iou) - 1} best/test_after_mIoU : %.6f" % np.mean(
+            class_iou[first_cls:]))
+        print(f"...from 0 to {first_cls - 1} : best/test_before_acc : %.6f" % np.mean(
+            class_acc[:first_cls]))
+        print(f"...from {first_cls} to {len(class_iou) - 1} best/test_after_acc : %.6f" % np.mean(
+            class_acc[first_cls:]))
 
 
 if __name__ == '__main__':
@@ -540,11 +576,15 @@ if __name__ == '__main__':
 
     opts = get_argparser().parse_args()
     #####################################################################
-    start_step = 0
+    if opts.ckpt is not None and os.path.isfile(opts.ckpt):
+        start_step = opts.start_step
+    else:
+        start_step = 0
     #####################################################################
+
     total_step = len(get_tasks(opts.dataset, opts.task))
 
     for step in range(start_step, total_step):
         opts.curr_step = step
         main(opts)
-        
+
