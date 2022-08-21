@@ -34,8 +34,10 @@ def memory_sampling_balanced(opts, prev_model):
         dataset = ADESegmentation
     else:
         raise NotImplementedError
-        
+
     train_dst = dataset(opts=opts, image_set='train', transform=transform, cil_step=opts.curr_step-1)
+
+    print('size of train set: ' + str(len(train_dst)))
     
     train_loader = data.DataLoader(
         train_dst, batch_size=opts.batch_size, 
