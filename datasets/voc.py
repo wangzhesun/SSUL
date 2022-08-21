@@ -289,8 +289,12 @@ class VOCSegmentation(data.Dataset):
             file_names = final_file_name
 
             while len(file_names) < opts.batch_size:
-                # file_names = file_names * 20
-                file_names = file_names * 100
+                if opts.num_shot == 5:
+                    file_names = file_names * 20
+                elif opts.num_shot == 1:
+                    file_names = file_names * 100
+                else:
+                    file_names = file_names * 5
             ############################################################################################
 
         print("size of file names:" + str(len(file_names)))

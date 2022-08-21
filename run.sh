@@ -16,7 +16,7 @@
 #
 
 
-DATA_ROOT=../data/PascalVOC12
+DATA_ROOT=../data/VOCdevkit/VOC2012
 DATASET=voc
 TASK=15-1 # [15-1, 10-1, 19-1, 15-5, 5-3, 5-1, 2-1, 2-2]
 EPOCH=50 #50
