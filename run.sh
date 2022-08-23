@@ -37,7 +37,7 @@ python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 -
                 --mem_size ${MEMORY} \
                 --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START}
                 #--ckpt ./checkpoints/deeplabv3_resnet101_voc_15-1_step_0_disjoint.pth \
-                
+
 
 # non few shot
 #python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
