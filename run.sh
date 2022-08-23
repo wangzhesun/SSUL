@@ -18,7 +18,7 @@
 
 DATA_ROOT=../data/VOCdevkit/VOC2012
 DATASET=voc
-TASK=15-1 # [15-1, 10-1, 19-1, 15-5, 5-3, 5-1, 2-1, 2-2]
+TASK=15-1-split2 # [15-1, 10-1, 19-1, 15-5, 5-3, 5-1, 2-1, 2-2] add split to task 15-1
 EPOCH=50 #50
 BATCH=26 #32
 LOSS=bce_loss
