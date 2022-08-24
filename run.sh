@@ -28,7 +28,7 @@ FEWSHOT=True
 NUMSHOT=5
 START=1
 #START=0
-MEMORY=100 # [0 (for SSUL), 100 (for SSUL-M)]
+MEMORY=0 # [0 (for SSUL), 100 (for SSUL-M)]
 
 # few shot step 0
 #python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
