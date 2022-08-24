@@ -793,7 +793,7 @@ def validate(opts, model, loader, device, metrics):
     return score
 
 
-def main(opts, seed, best_base, best_novel):
+def main(opts, seed):
     os.environ['CUDA_VISIBLE_DEVICES'] = opts.gpu_id
     bn_freeze = opts.bn_freeze if opts.curr_step > 0 else False
 
@@ -1171,11 +1171,9 @@ def main(opts, seed, best_base, best_novel):
         if (opts.curr_step == 5):
             new_base = np.mean(class_iou[:first_cls])
             new_novel = np.mean(class_iou[first_cls:])
-            if ((new_base + new_novel) / 2) > ((best_base + best_novel) / 2):
-                best_base = new_base
-                best_novel = new_novel
+            return new_base, new_novel
 
-    return best_base, best_novel
+    return -1, -1
 
 
 if __name__ == '__main__':
@@ -1192,8 +1190,8 @@ if __name__ == '__main__':
     total_step = len(get_tasks(opts.dataset, opts.task))
 
     ##################################################################
-    best_base = -1
-    best_novel = -1
+    # best_base = -1
+    # best_novel = -1
     num_runs = 5
     if not opts.few_shot:
         num_runs = 1
@@ -1202,11 +1200,31 @@ if __name__ == '__main__':
 
     np.random.seed(1234)
     seed_list = np.random.randint(0, 99999, size=(num_runs,))
+    base_iou = []
+    novel_iou = []
+
     for i in range(num_runs):
         for step in range(start_step, total_step):
             opts.curr_step = step
-            best_base, best_novel = main(opts, seed_list[i], best_base, best_novel)
+            # best_base, best_novel = main(opts, seed_list[i], best_base, best_novel)
+            new_base, new_novel = main(opts, seed_list[i])
+            base_iou.append(new_base)
+            novel_iou.append(new_novel)
 
-    print('best base iou is: ' + str(best_base))
-    print('best novel iou is: ' + str(best_novel))
+    base_iou = np.array(base_iou)
+    novel_iou = np.array(novel_iou)
+    print("test base iou: ")
+    print(base_iou)
+    print("test novel iou: ")
+    print(novel_iou)
+    total_mean_iou = np.add(base_iou, novel_iou) / 2
+    max_mean_iou_index = np.where(total_mean_iou == np.amax(total_mean_iou))[0][0]
+
+    print("Results of {} runs in a non-few-shot setting".format(num_runs))
+    # print("max Base IoU: {:.4f} max Novel IoU: {:.4f}".format(np.max(self.test_base_iou), np.max(self.test_novel_iou)))
+    print("max Base IoU: {:.4f} max Novel IoU: {:.4f}".format(base_iou[max_mean_iou_index],
+        novel_iou[max_mean_iou_index]))
+
+    print("mean Base IoU: {:.4f} mean Novel IoU: {:.4f}".format(np.mean(base_iou),
+                                                                np.mean(novel_iou)))
     ##################################################################
