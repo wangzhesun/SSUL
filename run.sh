@@ -19,7 +19,7 @@
 DATA_ROOT=../data/VOCdevkit/VOC2012
 DATASET=voc
 TASK=15-1-split2 # [15-1, 10-1, 19-1, 15-5, 5-3, 5-1, 2-1, 2-2] add split to task 15-1
-EPOCH=1 #50 #50
+EPOCH=50 #50
 BATCH=26 #32
 LOSS=bce_loss
 LR=0.01
@@ -28,7 +28,7 @@ FEWSHOT=True
 NUMSHOT=5
 START=1
 #START=0
-MEMORY=0 # [0 (for SSUL), 100 (for SSUL-M)]
+MEMORY=100 # [0 (for SSUL), 100 (for SSUL-M)]
 
 # few shot step 0
 #python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
