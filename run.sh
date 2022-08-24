@@ -26,7 +26,7 @@ LR=0.01
 THRESH=0.7
 FEWSHOT=True
 NUMSHOT=5
-START=0
+START=1
 MEMORY=100 # [0 (for SSUL), 100 (for SSUL-M)]
 
 # few shot
@@ -36,7 +36,7 @@ python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 -
                 --pseudo_thresh ${THRESH} --freeze --bn_freeze --unknown --w_transfer --amp \
                 --mem_size ${MEMORY} \
                 --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START}
-                #--ckpt ./checkpoints/deeplabv3_resnet101_voc_15-1_step_0_disjoint.pth \
+                --ckpt ./checkpoints/deeplabv3_resnet101_voc_15-1-split2_step_0_disjoint.pth \
 
 
 # non few shot
