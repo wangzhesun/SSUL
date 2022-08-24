@@ -1192,7 +1192,7 @@ if __name__ == '__main__':
     ##################################################################
     # best_base = -1
     # best_novel = -1
-    num_runs = 5
+    num_runs = 2
     if not opts.few_shot:
         num_runs = 1
 
