@@ -682,7 +682,14 @@ def get_dataset_list(dataset, task, step, mode, overlap=True):
     else:
         #######################################################################################
         # target_cls_old = list(range(1, target_cls[0]))
-        target_cls_old = list(range(1, 16))
+        # split 0
+        # target_cls_old = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        # split 1
+        # target_cls_old = [1, 2, 3, 4, 5, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        # split 2
+        target_cls_old = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20]
+        # split 3
+        # target_cls_old = list(range(1, 16))
         #######################################################################################
         target_cls_cum = target_cls + target_cls_old + [0, 255]
 
