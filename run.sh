@@ -26,17 +26,25 @@ LR=0.01
 THRESH=0.7
 FEWSHOT=True
 NUMSHOT=5
-#START=1
-START=0
+START=1
+#START=0
 MEMORY=100 # [0 (for SSUL), 100 (for SSUL-M)]
 
-# few shot
+# few shot step 0
 python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
                --lr ${LR} --batch_size ${BATCH} --train_epoch ${EPOCH} --loss_type ${LOSS} \
                 --dataset ${DATASET} --task ${TASK} --lr_policy poly --pseudo \
                 --pseudo_thresh ${THRESH} --freeze --bn_freeze --unknown --w_transfer --amp \
                 --mem_size ${MEMORY} \
-                --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START} 
+                --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START}
+
+# few shot step 1 - last
+#python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
+#               --lr ${LR} --batch_size ${BATCH} --train_epoch ${EPOCH} --loss_type ${LOSS} \
+#                --dataset ${DATASET} --task ${TASK} --lr_policy poly --pseudo \
+#                --pseudo_thresh ${THRESH} --freeze --bn_freeze --unknown --w_transfer --amp \
+#                --mem_size ${MEMORY} \
+#                --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START} \
 #                --ckpt ./checkpoints/deeplabv3_resnet101_voc_15-1-split2_step_0_disjoint.pth \
 
 
