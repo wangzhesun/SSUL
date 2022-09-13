@@ -94,7 +94,7 @@ class COCOSeg(datasets.vision.VisionDataset):
         img_desc = self.coco.imgs[img_id]
         img_fname = img_desc['file_name']
         img_fpath = os.path.join(self.img_dir, img_fname)
-        return Image.open(img_fpath).convert('RGB')
+        return Image.open(img_fpath).convert('RGB'), img_fname
 
     def _get_mask(self, img_id):
         img_desc = self.coco.imgs[img_id]
@@ -108,9 +108,9 @@ class COCOSeg(datasets.vision.VisionDataset):
 
     def __getitem__(self, idx: int):
         img_id = self.img_ids[idx]
-        img = self._get_img(img_id)
+        img, img_fname = self._get_img(img_id)
         seg_mask = self._get_mask(img_id)  # tensor
-        return (img, seg_mask)
+        return (img, seg_mask, img_fname)
 
     def _get_seg_mask(self, fname: str):
         deleted_idx = [91, 83, 71, 69, 68, 66, 45, 30, 29, 26, 12]

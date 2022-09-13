@@ -176,15 +176,16 @@ class COCOSegmentation(data.Dataset):
                  transform=None,
                  cil_step=0,
                  mem_size=0,
-                 seed=2022
-        ):
+                 seed=2022):
 
         self.root = opts.data_root
         self.task = opts.task
         self.overlap = opts.overlap
         self.unknown = opts.unknown
 
+        self.transform = transform
         self.image_set = image_set
+
         self.folding = opts.folding
         self.few_shot = opts.few_shot
         self.num_shot = opts.num_shot
@@ -310,7 +311,26 @@ class COCOSegmentation(data.Dataset):
 
 
     def __getitem__(self, index):
-        return self.dataset[index]
+        ############################################################
+        img, target, file_name = self.dataset[index]
+        sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
+
+        if self.transform is not None:
+            img, target, sal_map = self.transform(img, target, sal_map)
+
+        # add unknown label, background index: 0 -> 1, unknown index: 0
+        if self.image_set == 'train' and self.unknown:
+            target = torch.where(target == 255,
+                                 torch.zeros_like(target) + 255,  # keep 255 (uint8)
+                                 target + 1)  # unknown label
+
+            unknown_area = (target == 1)
+            target = torch.where(unknown_area, torch.zeros_like(target), target)
+
+        return img, target.long(), sal_map, file_name
+        # return self.dataset[index]
+        ############################################################
+
 
     def __len__(self):
         return len(self.dataset)

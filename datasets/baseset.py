@@ -54,10 +54,12 @@ class base_set(torch.utils.data.Dataset):
             params = {}
         else:
             raise NotImplementedError
-        data, label = self.dataset[index]
-        data = self.data_transforms(data)
-        data, label = self.joint_transforms(data, label)
-        return (data, label)
+        data, label, img_fname = self.dataset[index]
+        ##############################################################################3
+        # data = self.data_transforms(data)
+        # data, label = self.joint_transforms(data, label)
+        ##############################################################################3
+        return (data, label, img_fname)
 
     def __len__(self):
         return len(self.dataset)
