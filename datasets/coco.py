@@ -173,6 +173,7 @@ class COCOSegmentation(data.Dataset):
     def __init__(self,
                  opts,
                  image_set='train',
+                 transform=None,
                  cil_step=0,
                  mem_size=0):
 
