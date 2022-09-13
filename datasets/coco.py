@@ -175,7 +175,9 @@ class COCOSegmentation(data.Dataset):
                  image_set='train',
                  transform=None,
                  cil_step=0,
-                 mem_size=0):
+                 mem_size=0,
+                 seed=2022
+        ):
 
         self.root = opts.data_root
         self.task = opts.task
@@ -211,7 +213,6 @@ class COCOSegmentation(data.Dataset):
                 idxs = list(range(len(ds)))
                 final_file_name = []
                 if self.few_shot:
-                    seed = 2022
                     np.random.seed(seed)
                     random.seed(seed)
                     torch.manual_seed(seed)
