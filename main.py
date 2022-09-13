@@ -639,7 +639,7 @@ def get_argparser():
     # Datset Options
     parser.add_argument("--data_root", type=str, default='/data/DB/VOC2012',
                         help="path to Dataset")
-    parser.add_argument("--dataset", type=str, default='voc', choices=['voc', 'ade'],
+    parser.add_argument("--dataset", type=str, default='voc', choices=['coco', 'voc', 'ade'],
                         help='Name of dataset')
     parser.add_argument("--num_classes", type=int, default=None, help="num classes (default: None)")
 
@@ -1211,7 +1211,7 @@ if __name__ == '__main__':
             opts.curr_step = step
             # best_base, best_novel = main(opts, seed_list[i], best_base, best_novel)
             new_base, new_novel = main(opts, seed_list[i])
-            if (step == 5):
+            if step == 5:
                 base_iou.append(new_base)
                 novel_iou.append(new_novel)
 
