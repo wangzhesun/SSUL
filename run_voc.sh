@@ -15,7 +15,7 @@
 #    --unknown --w_transfer --amp --mem_size ${MEMORY}
 #
 
-
+#DATA_ROOT=../data/COCO2017
 DATA_ROOT=../data/VOCdevkit/VOC2012
 DATASET=voc
 TASK=15-1-split0 # [15-1, 10-1, 19-1, 15-5, 5-3, 5-1, 2-1, 2-2] add split to task 15-1
@@ -30,7 +30,7 @@ START=1
 #START=0
 MEMORY=100 # [0 (for SSUL), 100 (for SSUL-M)]
 
-# few shot step 0
+##### few shot step 0
 #python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
 #               --lr ${LR} --batch_size ${BATCH} --train_epoch ${EPOCH} --loss_type ${LOSS} \
 #                --dataset ${DATASET} --task ${TASK} --lr_policy poly --pseudo \
@@ -38,7 +38,7 @@ MEMORY=100 # [0 (for SSUL), 100 (for SSUL-M)]
 #                --mem_size ${MEMORY} \
 #                --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START}
 
-# few shot step 1 - last
+##### few shot step 1 - last
 python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
                --lr ${LR} --batch_size ${BATCH} --train_epoch ${EPOCH} --loss_type ${LOSS} \
                 --dataset ${DATASET} --task ${TASK} --lr_policy poly --pseudo \
@@ -48,7 +48,7 @@ python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 -
                 --ckpt ./checkpoints/deeplabv3_resnet101_voc_15-1-split0_step_0_disjoint.pth \
 
 
-# non few shot
+##### non few shot
 #python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 --crop_val \
 #               --lr ${LR} --batch_size ${BATCH} --train_epoch ${EPOCH} --loss_type ${LOSS} \
 #                --dataset ${DATASET} --task ${TASK} --lr_policy poly --pseudo \

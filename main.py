@@ -616,7 +616,7 @@ import numpy as np
 import cv2
 
 from torch.utils import data
-from datasets import VOCSegmentation, ADESegmentation
+from datasets import VOCSegmentation, ADESegmentation, COCOSegmentation
 from utils import ext_transforms as et
 from metrics import StreamSegMetrics
 
@@ -697,6 +697,7 @@ def get_argparser():
     parser.add_argument("--pseudo_thresh", type=float, default=0.7,
                         help="confidence threshold for pseudo-labeling")
     parser.add_argument("--task", type=str, default='15-1', help="cil task")
+    parser.add_argument("--folding", type=int, default=1)
     parser.add_argument("--curr_step", type=int, default=0)
     parser.add_argument("--overlap", action='store_true',
                         help="overlap setup (True), disjoint setup (False)")
@@ -741,6 +742,8 @@ def get_dataset(opts, seed):
         dataset = VOCSegmentation
     elif opts.dataset == 'ade':
         dataset = ADESegmentation
+    elif opts.dataset == 'coco':
+        dataset = COCOSegmentation
     else:
         raise NotImplementedError
 

@@ -12,7 +12,7 @@ import torch
 from PIL import Image
 
 from torch.utils import data
-from datasets import VOCSegmentation, ADESegmentation
+from datasets import VOCSegmentation, ADESegmentation, COCOSegmentation
 from utils import ext_transforms as et
 from utils.tasks import get_tasks
 
@@ -32,6 +32,8 @@ def memory_sampling_balanced(opts, prev_model):
         dataset = VOCSegmentation
     elif opts.dataset == 'ade':
         dataset = ADESegmentation
+    elif opts.dataset == 'coco':
+        dataset = COCOSegmentation
     else:
         raise NotImplementedError
 
