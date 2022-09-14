@@ -1173,7 +1173,10 @@ def main(opts, seed):
                   (opts.task, opts.curr_step, cur_epochs, cur_itrs, total_itrs,
                    avg_loss.avg, avg_time.avg * 1000, optimizer.param_groups[0]['lr']))
 
-        if val_interval > 0 and (cur_itrs) % val_interval == 0:
+        ##########################################################################3
+        if val_interval > 0 and (cur_itrs) % 1 == 0:
+        # if val_interval > 0 and (cur_itrs) % val_interval == 0:
+        ##############################################################################
             print("validation...")
             model.eval()
             val_score = validate(opts=opts, model=model, loader=val_loader,
