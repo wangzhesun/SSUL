@@ -992,16 +992,16 @@ def main(opts, seed):
            len(dataset_dict['test'])))
 
     ##################################################################################
-    print('\n printing max and min index 0 train image: ')
-    print(dataset_dict['train'][5][0].size())
-    print(torch.max(dataset_dict['train'][5][0]))
-    print(torch.min(dataset_dict['train'][5][0]))
-    print(dataset_dict['train'][5][0].is_cuda)
-    print('\n printing max and min index 5 train label: ')
-    print(dataset_dict['train'][5][1].size())
-    print(torch.max(dataset_dict['train'][5][1]))
-    print(torch.min(dataset_dict['train'][5][1]))
-    print(dataset_dict['train'][5][1].is_cuda)
+    print('\n printing max and min index 7 train image: ')
+    print(dataset_dict['train'][7][0].size())
+    print(torch.max(dataset_dict['train'][7][0]))
+    print(torch.min(dataset_dict['train'][7][0]))
+    print(dataset_dict['train'][7][0].is_cuda)
+    print('\n printing max and min index 7 train label: ')
+    print(dataset_dict['train'][7][1].size())
+    print(torch.max(dataset_dict['train'][7][1]))
+    print(torch.min(dataset_dict['train'][7][1]))
+    print(dataset_dict['train'][7][1].is_cuda)
     ##################################################################################
 
 
