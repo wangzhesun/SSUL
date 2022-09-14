@@ -33,10 +33,12 @@ class BCEWithLogitsLossWithIgnoreIndex(nn.Module):
         labels_new = torch.where(targets != self.ignore_index, targets, n_cl)
         # replace ignore with numclasses + 1 (to enable one hot and then remove it)
 
+        print('1')
+
         targets = F.one_hot(labels_new, inputs.shape[1] + 1).float().permute(0, 3, 1, 2)
 
         ###########################################################################
-        print('I AM HERE!!!!')
+        print('2')
         ###########################################################################
 
 

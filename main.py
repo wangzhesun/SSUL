@@ -1116,7 +1116,7 @@ def main(opts, seed):
             labels[rand_index, ...] = m_labels[rand_index, ...]
             sal_maps[rand_index, ...] = m_sal_maps[rand_index, ...]
 
-        print('1')
+        # print('1')
 
         """ forwarding and optimization """
         with torch.cuda.amp.autocast(enabled=opts.amp):
@@ -1141,7 +1141,7 @@ def main(opts, seed):
 
                 loss = criterion(outputs, pseudo_labels)
             else:
-                print('2')
+                # print('2')
                 ##################################################################################
                 print('\n printing max and min of output: ')
                 print(outputs.size())
@@ -1157,7 +1157,7 @@ def main(opts, seed):
                 ##################################################################################
                 loss = criterion(outputs, labels)
 
-        print('3')
+        # print('3')
 
         scaler.scale(loss).backward()
         scaler.step(optimizer)
