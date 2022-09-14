@@ -302,7 +302,7 @@ class COCOSegmentation(data.Dataset):
 
         ######################################################################
         # re-define target label according to the CIL case
-        # target = self.gt_label_mapping(target)
+        target = self.gt_label_mapping(target)
         ######################################################################
 
         ################################################################
