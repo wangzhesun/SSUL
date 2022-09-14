@@ -1000,16 +1000,16 @@ def main(opts, seed):
            len(dataset_dict['test'])))
 
     ##################################################################################
-    print('\n printing max and min index 7 train image: ')
-    print(dataset_dict['train'][7][0].size())
-    print(torch.max(dataset_dict['train'][7][0]))
-    print(torch.min(dataset_dict['train'][7][0]))
-    print(dataset_dict['train'][7][0].is_cuda)
-    print('\n printing max and min index 7 train label: ')
-    print(dataset_dict['train'][7][1].size())
-    print(torch.max(dataset_dict['train'][7][1]))
-    print(torch.min(dataset_dict['train'][7][1]))
-    print(dataset_dict['train'][7][1].is_cuda)
+    # print('\n printing max and min index 7 train image: ')
+    # print(dataset_dict['train'][7][0].size())
+    # print(torch.max(dataset_dict['train'][7][0]))
+    # print(torch.min(dataset_dict['train'][7][0]))
+    # print(dataset_dict['train'][7][0].is_cuda)
+    # print('\n printing max and min index 7 train label: ')
+    # print(dataset_dict['train'][7][1].size())
+    # print(torch.max(dataset_dict['train'][7][1]))
+    # print(torch.min(dataset_dict['train'][7][1]))
+    # print(dataset_dict['train'][7][1].is_cuda)
     ##################################################################################
 
 
@@ -1143,17 +1143,17 @@ def main(opts, seed):
             else:
                 # print('2')
                 ##################################################################################
-                print('\n printing max and min of output: ')
-                print(outputs.size())
-                print(outputs.shape)
-                print(torch.max(outputs))
-                print(torch.min(outputs))
-                print(outputs.is_cuda)
-                print('\n printing max and min of label: ')
-                print(labels.size())
-                print(torch.max(labels))
-                print(torch.min(labels))
-                print(labels.is_cuda)
+                # print('\n printing max and min of output: ')
+                # print(outputs.size())
+                # print(outputs.shape)
+                # print(torch.max(outputs))
+                # print(torch.min(outputs))
+                # print(outputs.is_cuda)
+                # print('\n printing max and min of label: ')
+                # print(labels.size())
+                # print(torch.max(labels))
+                # print(torch.min(labels))
+                # print(labels.is_cuda)
                 ##################################################################################
                 loss = criterion(outputs, labels)
 
