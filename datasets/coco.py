@@ -265,50 +265,20 @@ class COCOSegmentation(data.Dataset):
             else:
                 ds = COCOSeg(COCO_PATH, False)
                 self.dataset = base_set(ds, "test", cfg)
-        #
-        #
-        #
-        #
-        # if image_set == 'test':
-        #     file_names = open(os.path.join(ade_root, 'val.txt'), 'r')
-        #     file_names = file_names.read().splitlines()
-        #
-        # elif image_set == 'memory':
-        #     for s in range(cil_step):
-        #         self.target_cls += get_tasks('ade', self.task, s)
-        #
-        #     memory_json = os.path.join(ade_root, 'memory.json')
-        #
-        #     with open(memory_json, "r") as json_file:
-        #         memory_list = json.load(json_file)
-        #
-        #     file_names = memory_list[f"step_{cil_step}"]["memory_list"]
-        #     print("... memory list : ", len(file_names), self.target_cls)
-        #
-        #     while len(file_names) < opts.batch_size:
-        #         file_names = file_names * 2
-        #
-        # else:
-        #     file_names = get_dataset_list('ade', self.task, cil_step, image_set, self.overlap)
-        ########################################################################################
 
+        #####################################################################
+        # class re-ordering
+        all_steps = tasks.get_tasks('coco', self.task)
+        all_classes = []
+        for i in range(len(all_steps)):
+            all_classes += all_steps[i]
 
+        self.ordering_map = np.zeros(256, dtype=np.uint8) + 255
+        self.ordering_map[:len(all_classes)] = [all_classes.index(x) for x in
+                                                range(len(all_classes))]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # labels, labels_old, path_base = tasks.get_task_labels('coco', name=self.task, step=step)
+        # assert (len(self.images) == len(self.masks))
+        #####################################################################
 
 
     def __getitem__(self, index):
@@ -325,6 +295,10 @@ class COCOSegmentation(data.Dataset):
 
         sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
 
+        ######################################################################
+        # re-define target label according to the CIL case
+        target = self.gt_label_mapping(target)
+        ######################################################################
 
         if self.transform is not None:
             img, target, sal_map = self.transform(img, target, sal_map)
@@ -345,6 +319,17 @@ class COCOSegmentation(data.Dataset):
 
     def __len__(self):
         return len(self.dataset)
+
+    ###################################################################
+    def gt_label_mapping(self, gt):
+        gt = np.array(gt, dtype=np.uint8)
+        if self.image_set != 'test':
+            gt = np.where(np.isin(gt, self.target_cls), gt, 0)
+        gt = self.ordering_map[gt]
+        gt = Image.fromarray(gt)
+
+        return gt
+    #########################################################################################
 
     @staticmethod
     def __strip_zero(labels):
