@@ -316,8 +316,7 @@ class COCOSegmentation(data.Dataset):
 
         ################################################################
         print('\n printing unique class in train label after transform in coco.py: ')
-        a = T.ToTensor()(target)
-        print(torch.unique(a))
+        print(torch.unique(target))
         ################################################################
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
