@@ -1134,6 +1134,18 @@ def main(opts, seed):
                 loss = criterion(outputs, pseudo_labels)
             else:
                 print('2')
+                ##################################################################################
+                print('\n printing max and min of output: ')
+                print(outputs.size())
+                print(torch.max(outputs))
+                print(torch.min(outputs))
+                print(outputs.is_cuda)
+                print('\n printing max and min of label: ')
+                print(labels.size())
+                print(torch.max(labels))
+                print(torch.min(labels))
+                print(labels.is_cuda)
+                ##################################################################################
                 loss = criterion(outputs, labels)
 
         print('3')
