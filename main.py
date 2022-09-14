@@ -806,6 +806,11 @@ def main(opts, seed):
     if opts.unknown:  # re-labeling: [unknown, background, ...]
         opts.num_classes = [1, 1, opts.num_classes[0] - 1] + opts.num_classes[1:]
     fg_idx = 1 if opts.unknown else 0
+    
+    ##############################################################
+    print('print number of classes: ')
+    print(len(opts.num_classes))
+    ##############################################################
 
     curr_idx = [
         sum(len(get_tasks(opts.dataset, opts.task, step)) for step in range(opts.curr_step)),
