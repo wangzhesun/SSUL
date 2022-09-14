@@ -808,11 +808,11 @@ def main(opts, seed):
     fg_idx = 1 if opts.unknown else 0
 
     ##############################################################
-    print('print number of classes: ')
-    print(len(opts.num_classes))
-    print(opts.num_classes[0])
-    print(opts.num_classes[1])
-    print(opts.num_classes[2])
+    # print('print number of classes: ')
+    # print(len(opts.num_classes))
+    # print(opts.num_classes[0])
+    # print(opts.num_classes[1])
+    # print(opts.num_classes[2])
     ##############################################################
 
     curr_idx = [
@@ -1145,6 +1145,7 @@ def main(opts, seed):
                 ##################################################################################
                 print('\n printing max and min of output: ')
                 print(outputs.size())
+                print(outputs.shape())
                 print(torch.max(outputs))
                 print(torch.min(outputs))
                 print(outputs.is_cuda)
