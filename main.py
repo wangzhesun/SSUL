@@ -810,9 +810,9 @@ def main(opts, seed):
     ##############################################################
     print('print number of classes: ')
     print(len(opts.num_classes))
-    print(len(opts.num_classes[0]))
-    print(len(opts.num_classes[1]))
-    print(len(opts.num_classes[2]))
+    print(opts.num_classes[0])
+    print(opts.num_classes[1])
+    print(opts.num_classes[2])
     ##############################################################
 
     curr_idx = [
