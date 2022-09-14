@@ -1145,7 +1145,7 @@ def main(opts, seed):
                 ##################################################################################
                 print('\n printing max and min of output: ')
                 print(outputs.size())
-                print(outputs.shape())
+                print(outputs.shape)
                 print(torch.max(outputs))
                 print(torch.min(outputs))
                 print(outputs.is_cuda)
