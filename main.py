@@ -1045,7 +1045,7 @@ def main(opts, seed):
             class_acc[:first_cls]))
         print(f"...from {first_cls} to {len(class_iou) - 1} best/test_after_acc : %.6f" % np.mean(
             class_acc[first_cls:]))
-        return
+        return -1, -1
 
     if opts.lr_policy == 'poly':
         scheduler = utils.PolyLR(optimizer, total_itrs, power=0.9)
@@ -1255,29 +1255,32 @@ if __name__ == '__main__':
     base_iou = []
     novel_iou = []
 
-    for i in range(num_runs):
-        for step in range(start_step, total_step):
-            opts.curr_step = step
-            # best_base, best_novel = main(opts, seed_list[i], best_base, best_novel)
-            new_base, new_novel = main(opts, seed_list[i])
-            if step == 5:
-                base_iou.append(new_base)
-                novel_iou.append(new_novel)
+    if start_step == 0:
+        main(opts, seed_list[0])
+    else:
+        for i in range(num_runs):
+            for step in range(start_step, total_step):
+                opts.curr_step = step
+                # best_base, best_novel = main(opts, seed_list[i], best_base, best_novel)
+                new_base, new_novel = main(opts, seed_list[i])
+                if step == 5:
+                    base_iou.append(new_base)
+                    novel_iou.append(new_novel)
 
-    base_iou = np.array(base_iou)
-    novel_iou = np.array(novel_iou)
-    print("test base iou: ")
-    print(base_iou)
-    print("test novel iou: ")
-    print(novel_iou)
-    total_mean_iou = np.add(base_iou, novel_iou) / 2
-    max_mean_iou_index = np.where(total_mean_iou == np.amax(total_mean_iou))[0][0]
+        base_iou = np.array(base_iou)
+        novel_iou = np.array(novel_iou)
+        print("test base iou: ")
+        print(base_iou)
+        print("test novel iou: ")
+        print(novel_iou)
+        total_mean_iou = np.add(base_iou, novel_iou) / 2
+        max_mean_iou_index = np.where(total_mean_iou == np.amax(total_mean_iou))[0][0]
 
-    print("Results of {} runs in a non-few-shot setting".format(num_runs))
-    # print("max Base IoU: {:.4f} max Novel IoU: {:.4f}".format(np.max(self.test_base_iou), np.max(self.test_novel_iou)))
-    print("max Base IoU: {:.4f} max Novel IoU: {:.4f}".format(base_iou[max_mean_iou_index],
-        novel_iou[max_mean_iou_index]))
+        print("Results of {} runs in a non-few-shot setting".format(num_runs))
+        # print("max Base IoU: {:.4f} max Novel IoU: {:.4f}".format(np.max(self.test_base_iou), np.max(self.test_novel_iou)))
+        print("max Base IoU: {:.4f} max Novel IoU: {:.4f}".format(base_iou[max_mean_iou_index],
+            novel_iou[max_mean_iou_index]))
 
-    print("mean Base IoU: {:.4f} mean Novel IoU: {:.4f}".format(np.mean(base_iou),
-                                                                np.mean(novel_iou)))
+        print("mean Base IoU: {:.4f} mean Novel IoU: {:.4f}".format(np.mean(base_iou),
+                                                                    np.mean(novel_iou)))
     ##################################################################
