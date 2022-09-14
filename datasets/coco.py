@@ -313,11 +313,13 @@ class COCOSegmentation(data.Dataset):
     def __getitem__(self, index):
         ############################################################
         img, target, file_name = self.dataset[index]
-        sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
 
         #########################################
         print(target.size)
         #########################################
+
+        sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
+
 
         if self.transform is not None:
             img, target, sal_map = self.transform(img, target, sal_map)
