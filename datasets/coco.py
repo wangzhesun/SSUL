@@ -316,7 +316,7 @@ class COCOSegmentation(data.Dataset):
 
         #########################################
         print(type(target))
-        print(target.size)
+        print(target.size())
         #########################################
 
         sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
