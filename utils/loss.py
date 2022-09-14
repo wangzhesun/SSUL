@@ -31,10 +31,11 @@ class BCEWithLogitsLossWithIgnoreIndex(nn.Module):
         # inputs of size B x C x H x W
         n_cl = torch.tensor(inputs.shape[1]).to(inputs.device)
         labels_new = torch.where(targets != self.ignore_index, targets, n_cl)
-        # replace ignore with numclasses + 1 (to enable one hot and then remove it)
 
         print('1')
+        print(inputs.shape[1] + 1)
 
+        # replace ignore with numclasses + 1 (to enable one hot and then remove it)
         targets = F.one_hot(labels_new, inputs.shape[1] + 1).float().permute(0, 3, 1, 2)
 
         ###########################################################################
