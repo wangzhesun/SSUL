@@ -327,6 +327,13 @@ class VOCSegmentation(data.Dataset):
 
         img = Image.open(self.images[index]).convert('RGB')
         target = Image.open(self.masks[index])
+
+        ######################################################################
+        print(target.size())
+        # print(target)
+        ######################################################################
+
+
         if self.image_set == 'train':  # os.path.exists(self.sal_maps[index]):
             sal_map = Image.open(self.sal_maps[index])
         else:
