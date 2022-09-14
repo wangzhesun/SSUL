@@ -315,6 +315,7 @@ class COCOSegmentation(data.Dataset):
         img, target, file_name = self.dataset[index]
 
         #########################################
+        print(type(img))
         print(type(target))
         print(target.size())
         #########################################
