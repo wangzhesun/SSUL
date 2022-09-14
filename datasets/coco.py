@@ -316,7 +316,7 @@ class COCOSegmentation(data.Dataset):
         img, target, file_name = self.dataset[index]
 
         #########################################
-        target = T.ToPILImage(target)
+        target = T.ToPILImage()(target)
         print(type(img))
         print(type(target))
         print(target.size)
