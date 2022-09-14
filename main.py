@@ -1064,6 +1064,13 @@ def main(opts, seed):
             avg_loss.reset()
             avg_time.reset()
 
+        ################################################################
+        print('type of images')
+        print(type(images))
+        print('type of labels')
+        print(type(labels))
+        #################################################################
+
         images = images.to(device, dtype=torch.float32, non_blocking=True)
         labels = labels.to(device, dtype=torch.long, non_blocking=True)
         sal_maps = sal_maps.to(device, dtype=torch.long, non_blocking=True)

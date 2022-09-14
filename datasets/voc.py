@@ -329,8 +329,8 @@ class VOCSegmentation(data.Dataset):
         target = Image.open(self.masks[index])
 
         ######################################################################
-        print(type(target))
-        print(target.size)
+        # print(type(target))
+        # print(target.size)
         # print(target)
         ######################################################################
 
