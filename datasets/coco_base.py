@@ -118,7 +118,7 @@ class COCOSeg(datasets.vision.VisionDataset):
 
         ################################################################
         print('\n printing unique class in train label in coco_base.py: ')
-        print(torch.unique(raw_lbl))
+        print(torch.unique(torch.tensor(raw_lbl)))
         ################################################################
 
 

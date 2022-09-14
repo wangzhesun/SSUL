@@ -115,6 +115,12 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
     def __getitem__(self, idx: int):
         assert 0 <= idx and idx < len(self.subset_idx)
         img, target_tensor, img_fname = self.vanilla_ds[self.subset_idx[idx]]
+
+        ################################################################
+        print('\n printing unique class in train label in coco_20i.py: ')
+        print(torch.unique(target_tensor))
+        ################################################################
+
         if not self.vanilla_label:
             target_tensor = self.mask_pixel(target_tensor)
         return img, target_tensor, img_fname
