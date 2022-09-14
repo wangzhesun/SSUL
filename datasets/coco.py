@@ -318,9 +318,9 @@ class COCOSegmentation(data.Dataset):
         #########################################
         target = target.type(torch.float)
         target = T.ToPILImage()(target)
-        print(type(img))
-        print(type(target))
-        print(target.size)
+        # print(type(img))
+        # print(type(target))
+        # print(target.size)
         #########################################
 
         sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
