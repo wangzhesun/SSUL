@@ -991,6 +991,24 @@ def main(opts, seed):
           (opts.dataset, len(dataset_dict['train']), len(dataset_dict['val']),
            len(dataset_dict['test'])))
 
+    ##################################################################################
+    print('\n printing max and min index 0 train image: ')
+    print(dataset_dict['train'][0][0].size())
+    # print(dataset_dict['train'][1][0].size())
+    print(torch.max(dataset_dict['train'][5][0]))
+    print(torch.min(dataset_dict['train'][5][0]))
+    print(dataset_dict['train'][0][0].is_cuda)
+    print('\n printing max and min index 5 train label: ')
+    print(dataset_dict['train'][0][1].size())
+    # print(dataset_dict['train'][1][1].size())
+    print(torch.max(dataset_dict['train'][5][1]))
+    print(torch.min(dataset_dict['train'][5][1]))
+    print(dataset_dict['train'][0][1].is_cuda)
+    ##################################################################################
+
+
+
+
     if opts.curr_step > 0 and opts.mem_size > 0:
         memory_loader = data.DataLoader(
             dataset_dict['memory'], batch_size=opts.batch_size, shuffle=True, num_workers=4,
@@ -1065,10 +1083,10 @@ def main(opts, seed):
             avg_time.reset()
 
         ################################################################
-        print('type of images')
-        print(type(images))
-        print('type of labels')
-        print(type(labels))
+        # print('type of images')
+        # print(type(images))
+        # print('type of labels')
+        # print(type(labels))
         #################################################################
 
         images = images.to(device, dtype=torch.float32, non_blocking=True)
