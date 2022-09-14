@@ -316,6 +316,7 @@ class COCOSegmentation(data.Dataset):
         img, target, file_name = self.dataset[index]
 
         #########################################
+        target = target.type(torch.float)
         target = T.ToPILImage()(target)
         print(type(img))
         print(type(target))
