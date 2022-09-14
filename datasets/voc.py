@@ -349,10 +349,10 @@ class VOCSegmentation(data.Dataset):
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
 
-        #############################################3
-        print('print unknown: ')
-        print(self.unknown)
-        ###############################################
+        # #############################################3
+        # print('print unknown: ')
+        # print(self.unknown)
+        # ###############################################
 
 
         if self.image_set == 'train' and self.unknown:
