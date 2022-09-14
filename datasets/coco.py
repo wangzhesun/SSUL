@@ -138,6 +138,7 @@ import torch
 import json
 
 from PIL import Image
+import torchvision.transforms as T
 
 from .coco_base import COCOSeg
 from .coco_20i import COCO20iReader
@@ -315,9 +316,10 @@ class COCOSegmentation(data.Dataset):
         img, target, file_name = self.dataset[index]
 
         #########################################
+        target = T.ToPILImage(target)
         print(type(img))
         print(type(target))
-        print(target.size())
+        print(target.size)
         #########################################
 
         sal_map = Image.fromarray(np.ones(target.size()[::-1], dtype=np.uint8))
