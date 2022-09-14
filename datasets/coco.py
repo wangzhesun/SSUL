@@ -315,6 +315,10 @@ class COCOSegmentation(data.Dataset):
         img, target, file_name = self.dataset[index]
         sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
 
+        #########################################
+        print(target.size)
+        #########################################
+
         if self.transform is not None:
             img, target, sal_map = self.transform(img, target, sal_map)
 
