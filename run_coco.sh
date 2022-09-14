@@ -27,7 +27,7 @@ python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 -
 #                --pseudo_thresh ${THRESH} --freeze --bn_freeze --unknown --w_transfer --amp \
 #                --mem_size ${MEMORY} \
 #                --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START} \
-#                --ckpt ./checkpoints/deeplabv3_resnet101_voc_15-1-split0_step_0_disjoint.pth \
+#                --ckpt ./checkpoints/deeplabv3_resnet101_coco_15-1-split1_step_0_disjoint.pth \
 
 
 ##### non few shot
@@ -36,5 +36,5 @@ python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 -
 #                --dataset ${DATASET} --task ${TASK} --lr_policy poly --pseudo \
 #                --pseudo_thresh ${THRESH} --freeze --bn_freeze --unknown --w_transfer --amp \
 #                --mem_size ${MEMORY} \
-#                --ckpt ./checkpoints/deeplabv3_resnet101_voc_15-1_step_0_disjoint.pth \
+#                --ckpt ./checkpoints/deeplabv3_resnet101_coco_15-1-split1_step_0_disjoint.pth \
 #                --num_shot ${NUMSHOT} --start_step ${START}
