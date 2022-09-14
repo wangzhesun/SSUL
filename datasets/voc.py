@@ -348,6 +348,13 @@ class VOCSegmentation(data.Dataset):
             img, target, sal_map = self.transform(img, target, sal_map)
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
+
+        #############################################3
+        print('print unknown: ')
+        print(self.unknown)
+        ###############################################
+
+
         if self.image_set == 'train' and self.unknown:
             target = torch.where(target == 255,
                                  torch.zeros_like(target) + 255,  # keep 255 (uint8)
