@@ -307,7 +307,8 @@ class COCOSegmentation(data.Dataset):
 
         ################################################################
         print('\n printing unique class in train label after remapping in coco.py: ')
-        print(torch.unique(target.type(torch.float)))
+        a = T.ToTensor()(target)
+        print(torch.unique(a))
         ################################################################
 
         if self.transform is not None:
@@ -315,7 +316,8 @@ class COCOSegmentation(data.Dataset):
 
         ################################################################
         print('\n printing unique class in train label after transform in coco.py: ')
-        print(torch.unique(target.type(torch.float)))
+        a = T.ToTensor()(target)
+        print(torch.unique(a))
         ################################################################
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
