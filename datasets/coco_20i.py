@@ -96,6 +96,11 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
                 assert c in self.train_label_set
                 self.remap_dict[c] = map_idx
                 map_idx += 1
+
+        #################################################################################3
+        print('print map index: ')
+        print(map_idx)
+        ##################################################################################
     
     def __len__(self):
         return len(self.subset_idx)
