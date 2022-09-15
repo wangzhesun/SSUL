@@ -286,8 +286,8 @@ class COCOSegmentation(data.Dataset):
         img, target, file_name = self.dataset[index]
 
         ################################################################
-        print('\n printing unique class in train label before remapping in coco.py: ')
-        print(torch.unique(target))
+        # print('\n printing unique class in train label before remapping in coco.py: ')
+        # print(torch.unique(target))
         ################################################################
 
         #########################################
@@ -311,14 +311,14 @@ class COCOSegmentation(data.Dataset):
         ######################################################################
 
         ################################################################
-        print('printing ordering map: ')
+        # print('printing ordering map: ')
         # print(self.ordering_map)
 
 
 
-        print('\n printing unique class in train label after remapping in coco.py: ')
-        a = T.ToTensor()(target)
-        print(torch.unique(a))
+        # print('\n printing unique class in train label after remapping in coco.py: ')
+        # a = T.ToTensor()(target)
+        # print(torch.unique(a))
         # print(torch.unique(target))
         ################################################################
 
@@ -326,8 +326,8 @@ class COCOSegmentation(data.Dataset):
             img, target, sal_map = self.transform(img, target, sal_map)
 
         ################################################################
-        print('\n printing unique class in train label after transform in coco.py: ')
-        print(torch.unique(target))
+        # print('\n printing unique class in train label after transform in coco.py: ')
+        # print(torch.unique(target))
         ################################################################
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
@@ -352,18 +352,18 @@ class COCOSegmentation(data.Dataset):
         gt = np.array(gt, dtype=np.uint8)
 
         ########################################################################
-        print('print gt before: ')
-        print(np.unique(gt))
-        print('print target class: ')
-        print(self.target_cls)
+        # print('print gt before: ')
+        # print(np.unique(gt))
+        # print('print target class: ')
+        # print(self.target_cls)
         ########################################################################
 
         if self.image_set != 'test':
             gt = np.where(np.isin(gt, self.target_cls), gt, 0)
 
         ########################################################################
-        print('print gt after: ')
-        print(np.unique(gt))
+        # print('print gt after: ')
+        # print(np.unique(gt))
         ########################################################################
         gt = self.ordering_map[gt]
         gt = Image.fromarray(gt)
