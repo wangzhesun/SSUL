@@ -116,6 +116,13 @@ class COCOSeg(datasets.vision.VisionDataset):
         deleted_idx = [91, 83, 71, 69, 68, 66, 45, 30, 29, 26, 12]
         raw_lbl = np.array(Image.open(fname)).astype(np.int)
 
+        ################################################################
+        print('\n printing unique class in raw train label in coco_base.py: ')
+        print(torch.unique(raw_lbl))
+        ################################################################
+
+
+
         ignore_idx = (raw_lbl == 255)
         raw_lbl += 1
         raw_lbl[raw_lbl > 91] = 0  # STUFF classes are mapped to background
