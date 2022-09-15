@@ -999,6 +999,20 @@ def main(opts, seed):
           (opts.dataset, len(dataset_dict['train']), len(dataset_dict['val']),
            len(dataset_dict['test'])))
 
+    ################################################################
+    distinct_label = torch.tensor([]).float()
+    for step, (img, label) in enumerate(train_loader):
+        distinct_label = torch.unique(torch.concat((distinct_label, torch.unique(label)), 1))
+
+    print('print distinct label in training dataset: ')
+    print(distinct_label)
+
+
+
+    # print('\n printing unique class in train label in main.py: ')
+    # print(torch.unique(labels))
+    ################################################################
+
     ##################################################################################
     # print('\n printing max and min index 7 train image: ')
     # print(dataset_dict['train'][7][0].size())
@@ -1098,8 +1112,8 @@ def main(opts, seed):
         # print(type(labels))
         #################################################################
         ################################################################
-        print('\n printing unique class in train label in main.py: ')
-        print(torch.unique(labels))
+        # print('\n printing unique class in train label in main.py: ')
+        # print(torch.unique(labels))
         ################################################################
 
         images = images.to(device, dtype=torch.float32, non_blocking=True)
