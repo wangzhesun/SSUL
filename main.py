@@ -1005,14 +1005,14 @@ def main(opts, seed):
     # print(torch.max(dataset_dict['train'][7][0]))
     # print(torch.min(dataset_dict['train'][7][0]))
     # print(dataset_dict['train'][7][0].is_cuda)
-    print('\n printing max and min index 7777 train label: ')
-    print(dataset_dict['train'][7777][1].size())
-    print(torch.max(dataset_dict['train'][7777][1]))
-    print(torch.min(dataset_dict['train'][7777][1]))
-    print(dataset_dict['train'][7777][1].is_cuda)
-
-    print('\n printing unique class in train label: ')
-    print(torch.unique(dataset_dict['train'][7777][1]))
+    # print('\n printing max and min index 7777 train label: ')
+    # print(dataset_dict['train'][7777][1].size())
+    # print(torch.max(dataset_dict['train'][7777][1]))
+    # print(torch.min(dataset_dict['train'][7777][1]))
+    # print(dataset_dict['train'][7777][1].is_cuda)
+    #
+    # print('\n printing unique class in train label: ')
+    # print(torch.unique(dataset_dict['train'][7777][1]))
     # return
     ##################################################################################
 
