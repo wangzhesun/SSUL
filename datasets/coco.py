@@ -391,8 +391,8 @@ class COCOSegmentation(data.Dataset):
             img, target, sal_map = self.transform(img, target, sal_map)
 
         ################################################################
-        # print('\n printing unique class in train label after transform in coco.py: ')
-        # print(torch.unique(target))
+        print('\n printing unique class in train label after transform in coco.py: ')
+        print(torch.unique(target))
         ################################################################
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
