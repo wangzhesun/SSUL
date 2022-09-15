@@ -993,16 +993,16 @@ class ExtRandomCrop(object):
             sal = F.pad(sal, self.padding)
 
         # pad the width if needed
-        if self.pad_if_needed and img.size()[0] < self.size()[1]:
-            img = F.pad(img, padding=int((1 + self.size()[1] - img.size()[0]) / 2))
-            lbl = F.pad(lbl, padding=int((1 + self.size()[1] - lbl.size()[0]) / 2))
-            sal = F.pad(sal, padding=int((1 + self.size()[1] - sal.size()[0]) / 2))
+        if self.pad_if_needed and img.size[0] < self.size[1]:
+            img = F.pad(img, padding=int((1 + self.size[1] - img.size[0]) / 2))
+            lbl = F.pad(lbl, padding=int((1 + self.size[1] - lbl.size[0]) / 2))
+            sal = F.pad(sal, padding=int((1 + self.size[1] - sal.size[0]) / 2))
 
         # pad the height if needed
-        if self.pad_if_needed and img.size()[1] < self.size()[0]:
-            img = F.pad(img, padding=int((1 + self.size()[0] - img.size()[1]) / 2))
-            lbl = F.pad(lbl, padding=int((1 + self.size()[0] - lbl.size()[1]) / 2))
-            sal = F.pad(sal, padding=int((1 + self.size()[0] - sal.size()[1]) / 2))
+        if self.pad_if_needed and img.size()[1] < self.size[0]:
+            img = F.pad(img, padding=int((1 + self.size[0] - img.size[1]) / 2))
+            lbl = F.pad(lbl, padding=int((1 + self.size[0] - lbl.size[1]) / 2))
+            sal = F.pad(sal, padding=int((1 + self.size[0] - sal.size[1]) / 2))
 
         i, j, h, w = self.get_params(img, self.size)
 
