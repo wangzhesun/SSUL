@@ -294,7 +294,7 @@ class COCOSegmentation(data.Dataset):
         target = target.type(torch.float)
 
 
-        # target = T.ToPILImage()(target)
+        target = T.ToPILImage()(target)
 
 
 
@@ -303,7 +303,7 @@ class COCOSegmentation(data.Dataset):
         # print(target.size)
         #########################################
 
-        sal_map = Image.fromarray(np.ones(target.size()[::-1], dtype=np.uint8))
+        sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
 
         ######################################################################
         # re-define target label according to the CIL case
@@ -317,9 +317,9 @@ class COCOSegmentation(data.Dataset):
 
 
         print('\n printing unique class in train label after remapping in coco.py: ')
-        # a = T.ToTensor()(target)
-        # print(torch.unique(a))
-        print(torch.unique(target))
+        a = T.ToTensor()(target)
+        print(torch.unique(a))
+        # print(torch.unique(target))
         ################################################################
 
         if self.transform is not None:
@@ -354,6 +354,8 @@ class COCOSegmentation(data.Dataset):
         ########################################################################
         print('print gt before: ')
         print(np.unique(gt))
+        print('print target class: ')
+        print(self.target_cls)
         ########################################################################
 
         if self.image_set != 'test':
