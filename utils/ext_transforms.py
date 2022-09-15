@@ -697,7 +697,7 @@ class ExtRandomScale(object):
             PIL Image: Rescaled image.
             PIL Image: Rescaled label.
         """
-        assert img.size() == lbl.size()
+        assert img.size == lbl.size()
         scale = random.uniform(self.scale_range[0], self.scale_range[1])
         target_size = (int(img.size()[1] * scale), int(img.size()[0] * scale))
         return F.resize(img, target_size, self.interpolation), \
@@ -731,7 +731,7 @@ class ExtScale(object):
             PIL Image: Rescaled image.
             PIL Image: Rescaled label.
         """
-        assert img.size() == lbl.size()
+        assert img.size == lbl.size()
         target_size = (int(img.size()[1] * self.scale), int(img.size()[0] * self.scale))  # (H, W)
         return F.resize(img, target_size, self.interpolation), \
                F.resize(lbl, target_size, Image.NEAREST), \
@@ -866,7 +866,7 @@ class ExtPad(object):
         self.diviser = diviser
 
     def __call__(self, img, lbl, sal):
-        h, w = img.size()
+        h, w = img.size
         ph = (h // 32 + 1) * 32 - h if h % 32 != 0 else 0
         pw = (w // 32 + 1) * 32 - w if w % 32 != 0 else 0
         im = F.pad(img, (pw // 2, pw - pw // 2, ph // 2, ph - ph // 2))
@@ -967,8 +967,8 @@ class ExtRandomCrop(object):
         Returns:
             tuple: params (i, j, h, w) to be passed to ``crop`` for random crop.
         """
-        w, h = img.size()
-        th, tw = output_size()
+        w, h = img.size
+        th, tw = output_size
         if w == tw and h == th:
             return 0, 0, h, w
 
