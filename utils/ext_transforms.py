@@ -999,7 +999,7 @@ class ExtRandomCrop(object):
             sal = F.pad(sal, padding=int((1 + self.size[1] - sal.size[0]) / 2))
 
         # pad the height if needed
-        if self.pad_if_needed and img.size()[1] < self.size[0]:
+        if self.pad_if_needed and img.size[1] < self.size[0]:
             img = F.pad(img, padding=int((1 + self.size[0] - img.size[1]) / 2))
             lbl = F.pad(lbl, padding=int((1 + self.size[0] - lbl.size[1]) / 2))
             sal = F.pad(sal, padding=int((1 + self.size[0] - sal.size[1]) / 2))
