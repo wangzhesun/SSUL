@@ -697,7 +697,7 @@ class ExtRandomScale(object):
             PIL Image: Rescaled image.
             PIL Image: Rescaled label.
         """
-        assert img.size == lbl.size()
+        assert img.size == lbl.size
         scale = random.uniform(self.scale_range[0], self.scale_range[1])
         target_size = (int(img.size()[1] * scale), int(img.size()[0] * scale))
         return F.resize(img, target_size, self.interpolation), \
@@ -731,8 +731,8 @@ class ExtScale(object):
             PIL Image: Rescaled image.
             PIL Image: Rescaled label.
         """
-        assert img.size == lbl.size()
-        target_size = (int(img.size()[1] * self.scale), int(img.size()[0] * self.scale))  # (H, W)
+        assert img.size == lbl.size
+        target_size = (int(img.size[1] * self.scale), int(img.size[0] * self.scale))  # (H, W)
         return F.resize(img, target_size, self.interpolation), \
                F.resize(lbl, target_size, Image.NEAREST), \
                F.resize(sal, target_size, Image.NEAREST)
@@ -985,8 +985,8 @@ class ExtRandomCrop(object):
             PIL Image: Cropped image.
             PIL Image: Cropped label.
         """
-        assert img.size() == lbl.size(), 'size of img and lbl should be the same. %s, %s' % (
-        img.size(), lbl.size())
+        assert img.size == lbl.size, 'size of img and lbl should be the same. %s, %s' % (
+        img.size, lbl.size)
         if self.padding > 0:
             img = F.pad(img, self.padding)
             lbl = F.pad(lbl, self.padding)
