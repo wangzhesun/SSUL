@@ -292,13 +292,18 @@ class COCOSegmentation(data.Dataset):
 
         #########################################
         target = target.type(torch.float)
-        target = T.ToPILImage()(target)
+
+
+        # target = T.ToPILImage()(target)
+
+
+
         # print(type(img))
         # print(type(target))
         # print(target.size)
         #########################################
 
-        sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
+        sal_map = Image.fromarray(np.ones(target.size()[::-1], dtype=np.uint8))
 
         ######################################################################
         # re-define target label according to the CIL case
@@ -307,13 +312,14 @@ class COCOSegmentation(data.Dataset):
 
         ################################################################
         print('printing ordering map: ')
-        print(self.ordering_map)
+        # print(self.ordering_map)
 
 
 
         print('\n printing unique class in train label after remapping in coco.py: ')
-        a = T.ToTensor()(target)
-        print(torch.unique(a))
+        # a = T.ToTensor()(target)
+        # print(torch.unique(a))
+        print(torch.unique(target))
         ################################################################
 
         if self.transform is not None:
