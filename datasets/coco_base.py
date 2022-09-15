@@ -117,8 +117,8 @@ class COCOSeg(datasets.vision.VisionDataset):
         raw_lbl = np.array(Image.open(fname)).astype(np.int)
 
         ################################################################
-        print('\n printing unique class in raw train label in coco_base.py: ')
-        print(np.unique(raw_lbl))
+        # print('\n printing unique class in raw train label in coco_base.py: ')
+        # print(np.unique(raw_lbl))
         ################################################################
 
 
