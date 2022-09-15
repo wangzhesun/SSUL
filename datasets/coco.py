@@ -277,9 +277,6 @@ class COCOSegmentation(data.Dataset):
         self.ordering_map[:len(all_classes)] = [all_classes.index(x) for x in
                                                 range(len(all_classes))]
 
-        print('printing ordering map: ')
-        print(self.ordering_map)
-
         # assert (len(self.images) == len(self.masks))
         #####################################################################
 
@@ -309,6 +306,11 @@ class COCOSegmentation(data.Dataset):
         ######################################################################
 
         ################################################################
+        print('printing ordering map: ')
+        print(self.ordering_map)
+
+
+        
         print('\n printing unique class in train label after remapping in coco.py: ')
         a = T.ToTensor()(target)
         print(torch.unique(a))
