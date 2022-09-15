@@ -1004,7 +1004,11 @@ def main(opts, seed):
     for step, (img, label, _, _) in enumerate(train_loader):
         print(label.size())
         print(distinct_label.size())
-        distinct_label = torch.unique(torch.concat((distinct_label, torch.unique(label)), 1))
+        unique_tmp = torch.unique(label)
+        print(unique_tmp.size())
+        distinct_label = torch.concat((distinct_label, unique_tmp), 1)
+        print(distinct_label.size())
+        distinct_label = torch.unique(distinct_label)
 
     print('print distinct label in training dataset: ')
     print(distinct_label)
