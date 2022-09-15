@@ -293,7 +293,6 @@ class COCOSegmentation(data.Dataset):
         #########################################
         target = target.type(torch.float)
 
-
         # target = T.ToPILImage()(target)
 
 
