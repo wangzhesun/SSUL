@@ -1006,7 +1006,7 @@ def main(opts, seed):
         print(distinct_label.size())
         unique_tmp = torch.unique(label)
         print(unique_tmp.size())
-        distinct_label = torch.concat((distinct_label, unique_tmp), 1)
+        distinct_label = torch.concat((distinct_label, unique_tmp), 0)
         print(distinct_label.size())
         distinct_label = torch.unique(distinct_label)
 
