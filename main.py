@@ -1007,6 +1007,8 @@ def main(opts, seed):
     print('print distinct label in training dataset: ')
     print(distinct_label)
 
+    return -1, -1
+
 
 
     # print('\n printing unique class in train label in main.py: ')
