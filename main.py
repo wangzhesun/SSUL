@@ -1097,6 +1097,10 @@ def main(opts, seed):
         # print('type of labels')
         # print(type(labels))
         #################################################################
+        ################################################################
+        print('\n printing unique class in train label in main.py: ')
+        print(torch.unique(labels))
+        ################################################################
 
         images = images.to(device, dtype=torch.float32, non_blocking=True)
         labels = labels.to(device, dtype=torch.long, non_blocking=True)
