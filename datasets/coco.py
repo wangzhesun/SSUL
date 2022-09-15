@@ -344,12 +344,18 @@ class COCOSegmentation(data.Dataset):
     ###################################################################
     def gt_label_mapping(self, gt):
         gt = np.array(gt, dtype=np.uint8)
+
+        ########################################################################
+        print('print gt before: ')
+        print(np.unique(gt))
+        ########################################################################
+
         if self.image_set != 'test':
             gt = np.where(np.isin(gt, self.target_cls), gt, 0)
 
         ########################################################################
-        print('print gt: ')
-        print(gt)
+        print('print gt after: ')
+        print(np.unique(gt))
         ########################################################################
         gt = self.ordering_map[gt]
         gt = Image.fromarray(gt)
