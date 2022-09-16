@@ -410,7 +410,7 @@ class COCOSegmentation(data.Dataset):
         # # return img, target, sal_map, file_name
         # # return self.dataset[index]
         ############################################################
-        return img, target.long(), sal_map, file_name
+        return F.to_tensor(img), target.long(), sal_map, file_name
 
 
     def __len__(self):
