@@ -250,7 +250,7 @@ class COCOSegmentation(data.Dataset):
                 #######################################
             elif image_set == 'memory':
                 for s in range(cil_step):
-                    self.target_cls += tasks.get_tasks('ade', self.task, s)
+                    self.target_cls += tasks.get_tasks('coco', self.task, s)
 
                 coco_root = './datasets/data/coco'
                 memory_json = os.path.join(coco_root, 'memory.json')
@@ -374,7 +374,7 @@ class COCOSegmentation(data.Dataset):
 
         ######################################################################
         # re-define target label according to the CIL case
-        # target = self.gt_label_mapping(target)
+        target = self.gt_label_mapping(target)
         ######################################################################
 
         ################################################################
@@ -430,7 +430,7 @@ class COCOSegmentation(data.Dataset):
         # print('print gt after: ')
         # print(np.unique(gt))
         ########################################################################
-        gt = self.ordering_map[gt]
+        # gt = self.ordering_map[gt]
         gt = Image.fromarray(gt)
 
         return gt
