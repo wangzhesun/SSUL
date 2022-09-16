@@ -134,8 +134,10 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
         #################################################################################3
         # print('print map index: ')
         # print(map_idx)
-        print('print train label set: ')
-        print(self.train_label_set)
+        # print('print train label set: ')
+        # print(self.train_label_set)
+        print('print remap dict: ')
+        print(self.remap_dict)
         ##################################################################################
     
     def __len__(self):
