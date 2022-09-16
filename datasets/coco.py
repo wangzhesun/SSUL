@@ -388,16 +388,13 @@ class COCOSegmentation(data.Dataset):
         # print(torch.unique(target))
         ################################################################
 
-        # if self.transform is not None:
-        #     img, target, sal_map = self.transform(img, target, sal_map)
+        if self.transform is not None:
+            img, target, sal_map = self.transform(img, target, sal_map)
 
         ################################################################
         # print('\n printing unique class in train label after transform in coco.py: ')
         # print(torch.unique(target))
         ################################################################
-
-        target = torch.from_numpy( np.array( target, dtype='uint8') )
-        img = F.to_tensor(img)
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
         if self.image_set == 'train' and self.unknown:
