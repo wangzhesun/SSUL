@@ -378,8 +378,8 @@ class COCOSegmentation(data.Dataset):
         ######################################################################
 
         ################################################################
-        print('printing ordering map: ')
-        print(self.ordering_map)
+        # print('printing ordering map: ')
+        # print(self.ordering_map)
 
         # print('\n printing unique class in train label after remapping in coco.py: ')
         # a = T.ToTensor()(target)
@@ -430,7 +430,7 @@ class COCOSegmentation(data.Dataset):
         # print('print gt after: ')
         # print(np.unique(gt))
         ########################################################################
-        gt = self.ordering_map[gt]
+        # gt = self.ordering_map[gt]
         gt = Image.fromarray(gt)
 
         return gt
