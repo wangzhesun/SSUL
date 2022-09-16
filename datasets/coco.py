@@ -456,8 +456,8 @@ class COCOSegmentation(data.Dataset):
         ########################################################################
 
         if self.image_set != 'test':
-            # gt = np.where(self.dataset.remap_dict[gt] != 0, gt, 0)
-            gt = np.where(np.isin(gt, self.target_cls), gt, 0)
+            gt = np.where(True, gt, 0)
+            # gt = np.where(np.isin(gt, self.target_cls), gt, 0)
 
         ########################################################################
         # print('print gt after: ')
