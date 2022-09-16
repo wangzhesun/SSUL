@@ -312,8 +312,8 @@ class COCOSegmentation(data.Dataset):
         ##########################################################################
         # print('print ordering map:')
         # print(self.ordering_map)
-        print('print target class: ')
-        print(self.target_cls)
+        # print('print target class: ')
+        # print(self.target_cls)
         ##########################################################################
 
 
@@ -455,8 +455,9 @@ class COCOSegmentation(data.Dataset):
         # print(self.target_cls)
         ########################################################################
 
-        if self.image_set != 'test':
-            gt = np.where(np.isin(gt, self.target_cls), gt, 0)
+        # if self.image_set != 'test':
+        #     # gt = np.where(self.dataset.remap_dict[gt] != 0, gt, 0)
+        #     gt = np.where(np.isin(gt, self.target_cls), gt, 0)
 
         ########################################################################
         # print('print gt after: ')
