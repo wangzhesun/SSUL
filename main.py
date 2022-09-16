@@ -1205,8 +1205,8 @@ def main(opts, seed):
                    avg_loss.avg, avg_time.avg * 1000, optimizer.param_groups[0]['lr']))
 
         ##########################################################################3
-        if val_interval > 0 and (cur_itrs) % 200 == 0:
-        # if val_interval > 0 and (cur_itrs) % val_interval == 0:
+        # if val_interval > 0 and (cur_itrs) % 200 == 0:
+        if val_interval > 0 and (cur_itrs) % val_interval == 0:
         ##############################################################################
             print("validation...")
             model.eval()
