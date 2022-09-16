@@ -395,6 +395,8 @@ class COCOSegmentation(data.Dataset):
         # print(torch.unique(target))
         ################################################################
 
+        target = T.ToTensor()(target)
+
         # add unknown label, background index: 0 -> 1, unknown index: 0
         if self.image_set == 'train' and self.unknown:
             target = torch.where(target == 255,
@@ -405,7 +407,7 @@ class COCOSegmentation(data.Dataset):
             target = torch.where(unknown_area, torch.zeros_like(target), target)
 
         # return img, target.long(), sal_map, file_name
-        target = T.ToTensor()(target)
+
         return img, target, sal_map, file_name
         # return self.dataset[index]
         ############################################################
