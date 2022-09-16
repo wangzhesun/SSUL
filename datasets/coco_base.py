@@ -117,8 +117,8 @@ class COCOSeg(datasets.vision.VisionDataset):
         raw_lbl = np.array(Image.open(fname)).astype(np.int)
 
         ################################################################
-        print('\n printing unique class in raw train label in coco_base.py: ')
-        print(np.unique(raw_lbl))
+        # print('\n printing unique class in raw train label in coco_base.py: ')
+        # print(np.unique(raw_lbl))
         ################################################################
 
 
@@ -133,8 +133,8 @@ class COCOSeg(datasets.vision.VisionDataset):
         ################################################
 
         ################################################################
-        # print('\n printing unique class in train label in coco_base.py: ')
-        # print(torch.unique(torch.tensor(raw_lbl)))
+        print('\n printing unique class in train label in coco_base.py: ')
+        print(torch.unique(torch.tensor(raw_lbl)))
         ################################################################
 
         return torch.tensor(raw_lbl)
