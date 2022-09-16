@@ -130,8 +130,8 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
             target_tensor = self.mask_pixel(target_tensor)
 
         ################################################################
-        print('\n printing unique class in train label after mask in coco_20i.py: ')
-        print(torch.unique(target_tensor))
+        # print('\n printing unique class in train label after mask in coco_20i.py: ')
+        # print(torch.unique(target_tensor))
         ################################################################
         return img, target_tensor, img_fname
 
