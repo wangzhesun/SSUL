@@ -1000,22 +1000,22 @@ def main(opts, seed):
            len(dataset_dict['test'])))
 
     ################################################################
-    distinct_label = torch.tensor([]).float()
-    for step, (img, label, _, _) in enumerate(train_loader):
-        # print(label.size())
-        # print(distinct_label.size())
-        unique_tmp = torch.unique(label)
-        # print(unique_tmp.size())
-        distinct_label = torch.concat((distinct_label, unique_tmp), 0)
-        # print(distinct_label.size())
-        distinct_label = torch.unique(distinct_label)
-
-    print('print distinct label in training dataset: ')
-    print(distinct_label)
-    print('total distinct classes is: ')
-    print(distinct_label.size())
-
-    return -1, -1
+    # distinct_label = torch.tensor([]).float()
+    # for step, (img, label, _, _) in enumerate(train_loader):
+    #     # print(label.size())
+    #     # print(distinct_label.size())
+    #     unique_tmp = torch.unique(label)
+    #     # print(unique_tmp.size())
+    #     distinct_label = torch.concat((distinct_label, unique_tmp), 0)
+    #     # print(distinct_label.size())
+    #     distinct_label = torch.unique(distinct_label)
+    #
+    # print('print distinct label in training dataset: ')
+    # print(distinct_label)
+    # print('total distinct classes is: ')
+    # print(distinct_label.size())
+    #
+    # return -1, -1
 
 
 
