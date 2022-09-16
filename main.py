@@ -715,9 +715,9 @@ def get_dataset(opts, seed):
     """
 
     train_transform = et.ExtCompose([
-        # et.ExtResize(size=opts.crop_size),
-        # et.ExtRandomScale((0.5, 2.0)),
-        # et.ExtRandomCrop(size=(opts.crop_size, opts.crop_size), pad_if_needed=True),
+        et.ExtResize(size=opts.crop_size),
+        et.ExtRandomScale((0.5, 2.0)),
+        et.ExtRandomCrop(size=(opts.crop_size, opts.crop_size), pad_if_needed=True),
         et.ExtRandomHorizontalFlip(),
         et.ExtToTensor(),
         et.ExtNormalize(mean=[0.485, 0.456, 0.406],
