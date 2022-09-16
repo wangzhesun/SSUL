@@ -347,8 +347,8 @@ class COCOSegmentation(data.Dataset):
             img, target, file_name = self.dataset[index]
 
             ################################################################
-            # print('\n printing unique class in train label before remapping in coco.py: ')
-            # print(torch.unique(target))
+            print('\n printing unique class in train label before remapping in coco.py: ')
+            print(torch.unique(target))
             ################################################################
 
             #########################################
