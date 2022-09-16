@@ -999,23 +999,23 @@ def main(opts, seed):
           (opts.dataset, len(dataset_dict['train']), len(dataset_dict['val']),
            len(dataset_dict['test'])))
 
-    ###############################################################
-    distinct_label = torch.tensor([]).float()
-    for step, (img, label, _, _) in enumerate(train_loader):
-        # print(label.size())
-        # print(distinct_label.size())
-        unique_tmp = torch.unique(label)
-        # print(unique_tmp.size())
-        distinct_label = torch.concat((distinct_label, unique_tmp), 0)
-        # print(distinct_label.size())
-        distinct_label = torch.unique(distinct_label)
-
-    print('print distinct label in training dataset: ')
-    print(distinct_label)
-    print('total distinct classes is: ')
-    print(distinct_label.size())
-
-    return -1, -1
+    # ###############################################################
+    # distinct_label = torch.tensor([]).float()
+    # for step, (img, label, _, _) in enumerate(train_loader):
+    #     # print(label.size())
+    #     # print(distinct_label.size())
+    #     unique_tmp = torch.unique(label)
+    #     # print(unique_tmp.size())
+    #     distinct_label = torch.concat((distinct_label, unique_tmp), 0)
+    #     # print(distinct_label.size())
+    #     distinct_label = torch.unique(distinct_label)
+    #
+    # print('print distinct label in training dataset: ')
+    # print(distinct_label)
+    # print('total distinct classes is: ')
+    # print(distinct_label.size())
+    #
+    # return -1, -1
 
 
 
@@ -1205,8 +1205,8 @@ def main(opts, seed):
                    avg_loss.avg, avg_time.avg * 1000, optimizer.param_groups[0]['lr']))
 
         ##########################################################################3
-        # if val_interval > 0 and (cur_itrs) % 1000 == 0:
-        if val_interval > 0 and (cur_itrs) % val_interval == 0:
+        if val_interval > 0 and (cur_itrs) % 200 == 0:
+        # if val_interval > 0 and (cur_itrs) % val_interval == 0:
         ##############################################################################
             print("validation...")
             model.eval()
