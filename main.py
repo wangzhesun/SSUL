@@ -1122,8 +1122,8 @@ def main(opts, seed):
         # print(type(labels))
         #################################################################
         ################################################################
-        print('\n printing unique class in train label in main.py: ')
-        print(torch.unique(labels))
+        # print('\n printing unique class in train label in main.py: ')
+        # print(torch.unique(labels))
         ################################################################
 
         images = images.to(device, dtype=torch.float32, non_blocking=True)
