@@ -312,6 +312,8 @@ class COCOSegmentation(data.Dataset):
         ##########################################################################
         # print('print ordering map:')
         # print(self.ordering_map)
+        print('print target class: ')
+        print(self.target_cls)
         ##########################################################################
 
 
@@ -379,7 +381,7 @@ class COCOSegmentation(data.Dataset):
             ################################################################
 
             #########################################
-            # target = target.type(torch.float)
+            target = target.type(torch.float)
 
             # target = T.ToPILImage()(target)
 
