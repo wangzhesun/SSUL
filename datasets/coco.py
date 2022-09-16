@@ -430,7 +430,7 @@ class COCOSegmentation(data.Dataset):
         # print('print gt after: ')
         # print(np.unique(gt))
         ########################################################################
-        # gt = self.ordering_map[gt]
+        gt = self.ordering_map[gt]
         gt = Image.fromarray(gt)
 
         return gt
