@@ -75,12 +75,36 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
         # Sort subset idx to make dataset deterministic (because set is unordered)
         self.subset_idx = sorted(self.subset_idx)
 
+        ##########################################################################
+        distinct_label = torch.tensor([]).float()
+
+        for idx in range(len(self.subset_idx)):
+            img, target_tensor, img_fname = self.vanilla_ds[self.subset_idx[idx]]
+
+
+        # for step, (img, label, _, _) in enumerate(train_loader):
+            # print(label.size())
+            # print(distinct_label.size())
+            unique_tmp = torch.unique(label)
+            # print(unique_tmp.size())
+            distinct_label = torch.concat((distinct_label, unique_tmp), 0)
+            # print(distinct_label.size())
+            distinct_label = torch.unique(distinct_label)
+
+        print('print distinct label in training dataset: ')
+        print(distinct_label)
+        print('total distinct classes is: ')
+        print(distinct_label.size())
+
+        ##########################################################################
+
+
 
         #########################################################
-        print('print size of COCO dataset: ')
-        print(len(self.vanilla_ds))
-        print('print size of training dataset: ')
-        print(len(self.subset_idx))
+        # print('print size of COCO dataset: ')
+        # print(len(self.vanilla_ds))
+        # print('print size of training dataset: ')
+        # print(len(self.subset_idx))
         ##########################################################
 
 
