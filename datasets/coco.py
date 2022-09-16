@@ -374,7 +374,7 @@ class COCOSegmentation(data.Dataset):
 
         ######################################################################
         # re-define target label according to the CIL case
-        target = self.gt_label_mapping(target)
+        # target = self.gt_label_mapping(target)
         ######################################################################
 
         ################################################################
@@ -382,9 +382,9 @@ class COCOSegmentation(data.Dataset):
         # print(self.ordering_map)
 
         print('\n printing unique class in train label after remapping in coco.py: ')
-        a = T.ToTensor()(target)
-        print(torch.unique(a))
-        # print(torch.unique(target))
+        # a = T.ToTensor()(target)
+        # print(torch.unique(a))
+        print(torch.unique(target))
         ################################################################
 
         if self.transform is not None:
