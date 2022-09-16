@@ -98,8 +98,8 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
                 map_idx += 1
 
         #################################################################################3
-        print('print map index: ')
-        print(map_idx)
+        # print('print map index: ')
+        # print(map_idx)
         ##################################################################################
     
     def __len__(self):

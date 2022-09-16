@@ -1015,7 +1015,7 @@ def main(opts, seed):
     # print('total distinct classes is: ')
     # print(distinct_label.size())
 
-    return -1, -1
+    # return -1, -1
 
 
 
