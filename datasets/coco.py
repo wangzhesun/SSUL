@@ -408,9 +408,9 @@ class COCOSegmentation(data.Dataset):
             unknown_area = (target == 1)
             target = torch.where(unknown_area, torch.zeros_like(target), target)
 
-        # return img, target.long(), sal_map, file_name
+        return img, target.long(), sal_map, file_name
 
-        return img, target, sal_map, file_name
+        # return img, target, sal_map, file_name
         # return self.dataset[index]
         ############################################################
 
