@@ -396,6 +396,7 @@ class COCOSegmentation(data.Dataset):
         ################################################################
 
         target = T.ToTensor()(target)
+        img = T.ToTensor()(img)
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
         if self.image_set == 'train' and self.unknown:
