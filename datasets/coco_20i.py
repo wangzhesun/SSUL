@@ -85,7 +85,7 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
         # for step, (img, label, _, _) in enumerate(train_loader):
             # print(label.size())
             # print(distinct_label.size())
-            unique_tmp = torch.unique(label)
+            unique_tmp = torch.unique(target_tensor)
             # print(unique_tmp.size())
             distinct_label = torch.concat((distinct_label, unique_tmp), 0)
             # print(distinct_label.size())
