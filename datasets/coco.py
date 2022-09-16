@@ -347,8 +347,8 @@ class COCOSegmentation(data.Dataset):
             img, target, file_name = self.dataset[index]
 
             ################################################################
-            print('\n printing unique class in train label before remapping in coco.py: ')
-            print(torch.unique(target))
+            # print('\n printing unique class in train label before remapping in coco.py: ')
+            # print(torch.unique(target))
             ################################################################
 
             #########################################
@@ -391,8 +391,8 @@ class COCOSegmentation(data.Dataset):
             img, target, sal_map = self.transform(img, target, sal_map)
 
         ################################################################
-        print('\n printing unique class in train label after transform in coco.py: ')
-        print(torch.unique(target))
+        # print('\n printing unique class in train label after transform in coco.py: ')
+        # print(torch.unique(target))
         ################################################################
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
@@ -423,8 +423,8 @@ class COCOSegmentation(data.Dataset):
         # print(self.target_cls)
         ########################################################################
 
-        # if self.image_set != 'test':
-        #     gt = np.where(np.isin(gt, self.target_cls), gt, 0)
+        if self.image_set != 'test':
+            gt = np.where(np.isin(gt, self.target_cls), gt, 0)
 
         ########################################################################
         # print('print gt after: ')
