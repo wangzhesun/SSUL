@@ -396,7 +396,7 @@ class COCOSegmentation(data.Dataset):
         # print(torch.unique(target))
         ################################################################
 
-        target = torch.from_numpy( np.array( target, dtype=self.target_type) )
+        target = torch.from_numpy( np.array( target, dtype='uint8') )
         img = F.to_tensor(img)
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
