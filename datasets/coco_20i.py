@@ -136,9 +136,32 @@ class COCO20iReader(torchvision.datasets.vision.VisionDataset):
         # print(map_idx)
         # print('print train label set: ')
         # print(self.train_label_set)
-        print('print remap dict: ')
-        print(self.remap_dict)
+        # print('print remap dict: ')
+        # print(self.remap_dict)
         ##################################################################################
+        ##########################################################################
+        distinct_label = torch.tensor([]).float()
+
+        for idx in range(len(self.subset_idx)):
+            img, target_tensor, img_fname = self.vanilla_ds[self.subset_idx[idx]]
+            target_tensor = self.mask_pixel(target_tensor)
+
+
+        # for step, (img, label, _, _) in enumerate(train_loader):
+            # print(label.size())
+            # print(distinct_label.size())
+            unique_tmp = torch.unique(target_tensor)
+            # print(unique_tmp.size())
+            distinct_label = torch.concat((distinct_label, unique_tmp), 0)
+            # print(distinct_label.size())
+            distinct_label = torch.unique(distinct_label)
+
+        print('print distinct label in training dataset: ')
+        print(distinct_label)
+        print('total distinct classes is: ')
+        print(distinct_label.size())
+
+        ##########################################################################
     
     def __len__(self):
         return len(self.subset_idx)
