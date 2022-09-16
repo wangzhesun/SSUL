@@ -144,6 +144,7 @@ from .coco_base import COCOSeg
 from .coco_20i import COCO20iReader
 from .baseset import base_set
 from utils import tasks
+import torchvision.transforms.functional as F
 
 cfg = {'DATASET': {
            'TRANSFORM': {
@@ -395,8 +396,8 @@ class COCOSegmentation(data.Dataset):
         # print(torch.unique(target))
         ################################################################
 
-        target = T.ToTensor()(target)
-        img = T.ToTensor()(img)
+        target = torch.from_numpy( np.array( target, dtype=self.target_type) )
+        img = F.to_tensor(img)
 
         # add unknown label, background index: 0 -> 1, unknown index: 0
         if self.image_set == 'train' and self.unknown:
