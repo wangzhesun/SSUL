@@ -423,8 +423,8 @@ class COCOSegmentation(data.Dataset):
         # print(self.target_cls)
         ########################################################################
 
-        if self.image_set != 'test':
-            gt = np.where(np.isin(gt, self.target_cls), gt, 0)
+        # if self.image_set != 'test':
+        #     gt = np.where(np.isin(gt, self.target_cls), gt, 0)
 
         ########################################################################
         # print('print gt after: ')
