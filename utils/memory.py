@@ -63,7 +63,7 @@ def memory_sampling_balanced(opts, prev_model):
 
         print('print type of target: ')
         print(type(targets))
-        print('print type of target: ')
+        print('print type of image names: ')
         print(type(img_names))
         
         with torch.no_grad():
