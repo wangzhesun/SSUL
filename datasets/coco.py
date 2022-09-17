@@ -221,8 +221,9 @@ class COCOSegmentation(data.Dataset):
                     random.seed(seed)
                     torch.manual_seed(seed)
                     for k in self.target_cls:
+                        label_idxs = ds.get_class_map(k)
                         for _ in range(self.num_shot):
-                            idx = random.choice(idxs)
+                            idx = random.choice(label_idxs)
                             while True:
                                 novel_img_chw, mask_hw = dataset[idx]
                                 pixel_sum = torch.sum(mask_hw == k)
@@ -232,8 +233,23 @@ class COCOSegmentation(data.Dataset):
                                     final_index_list.append(idx)
                                     break
                                 else:
-                                    idx = random.choice(idxs)
-                    assert len(final_index_list) == self.num_shot*len(self.target_cls)
+                                    idx = random.choice(label_idxs)
+
+                        ##########################################################
+                        # for _ in range(self.num_shot):
+                        #     idx = random.choice(idxs)
+                        #     while True:
+                        #         novel_img_chw, mask_hw = dataset[idx]
+                        #         pixel_sum = torch.sum(mask_hw == k)
+                        #         # If the selected sample is bad (more than 1px) and has not been selected,
+                        #         # we choose the example.
+                        #         if pixel_sum > 1 and idx not in final_index_list:
+                        #             final_index_list.append(idx)
+                        #             break
+                        #         else:
+                        #             idx = random.choice(idxs)
+                        ##########################################################
+                    # assert len(final_index_list) == self.num_shot*len(self.target_cls)
                 else:
                     final_index_list = idxs
 
@@ -259,17 +275,21 @@ class COCOSegmentation(data.Dataset):
                 with open(memory_json, "r") as json_file:
                     memory_list = json.load(json_file)
 
-                file_names = memory_list[f"step_{cil_step}"]["memory_list"]
-                print("... memory list : ", len(file_names), self.target_cls)
+                file_idxs = memory_list[f"step_{cil_step}"]["memory_list"]
+                print("... memory list : ", len(file_idxs), self.target_cls)
 
-                while len(file_names) < opts.batch_size:
-                    file_names = file_names * 2
+                while len(file_idxs) < opts.batch_size:
+                    file_idxs = file_idxs * 2
 
+                ds = COCOSeg(COCO_PATH, False, memory=True, memory_idxs=file_idxs)
+                self.dataset = base_set(ds, "test", cfg)
+
+                # image_dir = os.path.join(opts.data_root, '{}2017'.format('train'))
                 # self.images = [os.path.join(image_dir, x + ".jpg") for x in file_names]
-                # self.masks = [os.path.join(mask_dir, x + ".png") for x in file_names]
-                self.images = [os.path.join(coco_root, x + ".jpg") for x in file_names]
-                self.masks = [os.path.join(coco_root, x + ".png") for x in file_names]
-                self.file_names = file_names
+                # self.masks = [os.path.join(image_dir, x + ".png") for x in file_names]
+                # # self.images = [os.path.join(coco_root, x + ".jpg") for x in file_names]
+                # # self.masks = [os.path.join(coco_root, x + ".png") for x in file_names]
+                # self.file_names = file_names
             else:
                 ds = COCOSeg(COCO_PATH, False)
                 self.dataset = base_set(ds, "test", cfg)
@@ -372,34 +392,55 @@ class COCOSegmentation(data.Dataset):
         #
         # return img, target.long(), sal_map, file_name
         # # return self.dataset[index]
-        if self.image_set != 'memory':
-            img, target, file_name = self.dataset[index]
+        #
+        #
+        # if self.image_set != 'memory':
+        #     img, target, file_id = self.dataset[index]
+        #
+        #     ################################################################
+        #     # print('\n printing unique class in train label before remapping in coco.py: ')
+        #     # print(torch.unique(target))
+        #     ################################################################
+        #
+        #     #########################################
+        #     target = target.type(torch.float)
+        #
+        #     # target = T.ToPILImage()(target)
+        #
+        #
+        #
+        #     # print(type(img))
+        #     # print(type(target))
+        #     # print(target.size)
+        #     #########################################
+        #
+        #     sal_map = Image.fromarray(np.ones(target.size()[::-1], dtype=np.uint8))
+        # else:
+        #     file_name = self.file_names[index]
+        #
+        #     img = Image.open(self.images[index]).convert('RGB')
+        #     target = Image.open(self.masks[index])
+        #
+        #     sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
 
-            ################################################################
-            # print('\n printing unique class in train label before remapping in coco.py: ')
-            # print(torch.unique(target))
-            ################################################################
+        img, target, file_id = self.dataset[index]
 
-            #########################################
-            target = target.type(torch.float)
+        ################################################################
+        # print('\n printing unique class in train label before remapping in coco.py: ')
+        # print(torch.unique(target))
+        ################################################################
 
-            # target = T.ToPILImage()(target)
+        #########################################
+        target = target.type(torch.float)
 
+        # target = T.ToPILImage()(target)
 
+        # print(type(img))
+        # print(type(target))
+        # print(target.size)
+        #########################################
 
-            # print(type(img))
-            # print(type(target))
-            # print(target.size)
-            #########################################
-
-            sal_map = Image.fromarray(np.ones(target.size()[::-1], dtype=np.uint8))
-        else:
-            file_name = self.file_names[index]
-
-            img = Image.open(self.images[index]).convert('RGB')
-            target = Image.open(self.masks[index])
-
-            sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
+        sal_map = Image.fromarray(np.ones(target.size()[::-1], dtype=np.uint8))
 
         ######################################################################
         # re-define target label according to the CIL case
@@ -433,7 +474,7 @@ class COCOSegmentation(data.Dataset):
             unknown_area = (target == 1)
             target = torch.where(unknown_area, torch.zeros_like(target), target)
 
-        return img, target.long(), sal_map, file_name
+        return img, target.long(), sal_map, file_id
 
         # return img, target, sal_map, file_name
         # return self.dataset[index]
