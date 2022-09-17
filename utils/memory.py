@@ -60,6 +60,11 @@ def memory_sampling_balanced(opts, prev_model):
     
     print("...start memory candidates collection")
     for images, targets, _, img_names in train_loader:
+
+        print('print type of target: ')
+        print(type(targets))
+        print('print type of target: ')
+        print(type(img_names))
         
         with torch.no_grad():
             # current pseudo labeling
