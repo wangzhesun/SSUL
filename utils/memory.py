@@ -39,6 +39,18 @@ def memory_sampling_balanced(opts, prev_model):
 
     train_dst = dataset(opts=opts, image_set='train', transform=transform, cil_step=opts.curr_step-1)
 
+
+    ##########################################3
+    img, targ, sal, id = train_dst[0]
+    print('print type of file name: ')
+    print(type(id))
+    #########################################3#
+
+
+
+
+
+
     print('size of train set: ' + str(len(train_dst)))
     
     train_loader = data.DataLoader(
@@ -61,10 +73,13 @@ def memory_sampling_balanced(opts, prev_model):
     print("...start memory candidates collection")
     for images, targets, _, img_names in train_loader:
 
-        print('print type of target: ')
-        print(type(targets))
-        print('print type of image names: ')
-        print(type(img_names))
+
+        ################################################################
+        # print('print type of target: ')
+        # print(type(targets))
+        # print('print type of image names: ')
+        # print(type(img_names))
+        ################################################################
         
         with torch.no_grad():
             # current pseudo labeling
