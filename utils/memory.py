@@ -41,9 +41,9 @@ def memory_sampling_balanced(opts, prev_model):
 
 
     ##########################################3
-    img, targ, sal, id = train_dst[0]
-    print('print type of file name: ')
-    print(type(id))
+    # img, targ, sal, id = train_dst[0]
+    # print('print type of file name: ')
+    # print(type(id))
     #########################################3#
 
 
@@ -79,6 +79,9 @@ def memory_sampling_balanced(opts, prev_model):
         # print(type(targets))
         # print('print type of image names: ')
         # print(type(img_names))
+        ################################################################
+        img_names = img_names.tolist()
+        img_names = tuple(img_names)
         ################################################################
         
         with torch.no_grad():
