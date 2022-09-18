@@ -216,6 +216,7 @@ class COCOSegmentation(data.Dataset):
                 #######################################
                 idxs = list(range(len(ds)))
                 final_index_list = []
+                self.target_cls.remove(255)
                 if self.few_shot:
                     np.random.seed(seed)
                     random.seed(seed)
@@ -252,6 +253,8 @@ class COCOSegmentation(data.Dataset):
                     # assert len(final_index_list) == self.num_shot*len(self.target_cls)
                 else:
                     final_index_list = idxs
+
+                self.target_cls += [255]
 
                 idxs = final_index_list
 
