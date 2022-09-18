@@ -281,6 +281,9 @@ class COCOSegmentation(data.Dataset):
                 file_idxs = memory_list[f"step_{cil_step}"]["memory_list"]
                 print("... memory list : ", len(file_idxs), self.target_cls)
 
+                print('print memory list:')
+                print(file_idxs)
+
                 while len(file_idxs) < opts.batch_size:
                     file_idxs = file_idxs * 2
 
@@ -425,9 +428,9 @@ class COCOSegmentation(data.Dataset):
         #     target = Image.open(self.masks[index])
         #
         #     sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
-        if self.image_set == 'memory':
-            print('print memory index: ')
-            print(index)
+        # if self.image_set == 'memory':
+        #     print('print memory index: ')
+        #     print(index)
         img, target, file_id = self.dataset[index]
 
         ################################################################
