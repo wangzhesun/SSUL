@@ -201,6 +201,10 @@ class COCOSeg(datasets.vision.VisionDataset):
             self.img_ids = memory_idxs
         ########################################################################
 
+        #########################################################################
+        print('print size of dataset: ')
+        print(len(self.img_ids))
+        #########################################################################
 
         # COCO class
         class_list = sorted([i for i in self.coco.cats.keys()])
