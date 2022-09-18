@@ -225,7 +225,7 @@ class COCOSegmentation(data.Dataset):
                         for _ in range(self.num_shot):
                             idx = random.choice(label_idxs)
                             while True:
-                                novel_img_chw, mask_hw, _, _ = dataset[idx]
+                                novel_img_chw, mask_hw, _ = dataset[idx]
                                 pixel_sum = torch.sum(mask_hw == k)
                                 # If the selected sample is bad (more than 1px) and has not been selected,
                                 # we choose the example.
