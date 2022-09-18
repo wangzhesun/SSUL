@@ -144,7 +144,7 @@ class Subset(torch.utils.data.Dataset):
         self.target_transform = target_transform
 
     def __getitem__(self, idx):
-        sample, target, _ = self.dataset[self.indices[idx]]
+        sample, target, file_idx = self.dataset[self.indices[idx]]
 
         if self.transform is not None:
             sample, target = self.transform(sample, target)
@@ -152,7 +152,7 @@ class Subset(torch.utils.data.Dataset):
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        return sample, target
+        return sample, target, file_idx
 
     def __len__(self):
         return len(self.indices)
