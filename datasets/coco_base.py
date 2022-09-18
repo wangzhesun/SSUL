@@ -287,7 +287,10 @@ class COCOSeg(datasets.vision.VisionDataset):
         img_id = self.img_ids[idx]
         img= self._get_img(img_id)
         seg_mask = self._get_mask(img_id)  # tensor
-        return (img, seg_mask, img_id)
+        ##################################
+        return (img, seg_mask, idx)
+        # return (img, seg_mask, img_id)
+        ##################################
 
     def _get_seg_mask(self, fname: str):
         deleted_idx = [91, 83, 71, 69, 68, 66, 45, 30, 29, 26, 12]
