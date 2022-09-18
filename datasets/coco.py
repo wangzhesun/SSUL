@@ -425,7 +425,9 @@ class COCOSegmentation(data.Dataset):
         #     target = Image.open(self.masks[index])
         #
         #     sal_map = Image.fromarray(np.ones(target.size[::-1], dtype=np.uint8))
-
+        if self.image_set == 'memory':
+            print('print memory index: ')
+            print(index)
         img, target, file_id = self.dataset[index]
 
         ################################################################
