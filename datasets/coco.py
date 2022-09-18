@@ -287,8 +287,13 @@ class COCOSegmentation(data.Dataset):
                 while len(file_idxs) < opts.batch_size:
                     file_idxs = file_idxs * 2
 
-                ds = COCOSeg(COCO_PATH, False, memory=True, memory_idxs=file_idxs)
-                self.dataset = base_set(ds, "test", cfg)
+                #############################################################
+                # ds = COCOSeg(COCO_PATH, False, memory=True, memory_idxs=file_idxs)
+                # self.dataset = base_set(ds, "test", cfg)
+                ds = COCOSeg(COCO_PATH, False)
+                dataset = base_set(ds, "test", cfg)
+                self.dataset = Subset(dataset, file_idxs)
+                #############################################################
 
                 # image_dir = os.path.join(opts.data_root, '{}2017'.format('train'))
                 # self.images = [os.path.join(image_dir, x + ".jpg") for x in file_names]
