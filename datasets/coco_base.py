@@ -200,13 +200,13 @@ class COCOSeg(datasets.vision.VisionDataset):
         else:
             self.img_ids = memory_idxs
         ########################################################################
-        print('print max img_ids:')
-        print(max(self.img_ids))
+        # print('print max img_ids:')
+        # print(max(self.img_ids))
         ########################################################################
 
         #########################################################################
-        print('print size of dataset: ')
-        print(len(self.img_ids))
+        # print('print size of dataset: ')
+        # print(len(self.img_ids))
         #########################################################################
 
         # COCO class

@@ -282,8 +282,8 @@ class COCOSegmentation(data.Dataset):
                 print("... memory list : ", len(file_idxs), self.target_cls)
 
                 #############################################################
-                print('print memory list:')
-                print(file_idxs)
+                # print('print memory list:')
+                # print(file_idxs)
                 #############################################################
 
                 while len(file_idxs) < opts.batch_size:
@@ -297,8 +297,8 @@ class COCOSegmentation(data.Dataset):
                 self.dataset = Subset(dataset, file_idxs)
                 #############################################################
                 #########################################################################
-                print('print size of memory dataset: ')
-                print(len(self.dataset))
+                # print('print size of memory dataset: ')
+                # print(len(self.dataset))
                 #########################################################################
 
                 # image_dir = os.path.join(opts.data_root, '{}2017'.format('train'))
