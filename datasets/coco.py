@@ -281,8 +281,10 @@ class COCOSegmentation(data.Dataset):
                 file_idxs = memory_list[f"step_{cil_step}"]["memory_list"]
                 print("... memory list : ", len(file_idxs), self.target_cls)
 
+                #############################################################
                 print('print memory list:')
                 print(file_idxs)
+                #############################################################
 
                 while len(file_idxs) < opts.batch_size:
                     file_idxs = file_idxs * 2
