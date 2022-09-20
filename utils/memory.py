@@ -80,8 +80,9 @@ def memory_sampling_balanced(opts, prev_model):
         # print('print type of image names: ')
         # print(type(img_names))
         ################################################################
-        img_names = img_names.tolist()
-        img_names = tuple(img_names)
+        if opts.dataset == 'coco':
+            img_names = img_names.tolist()
+            img_names = tuple(img_names)
         ################################################################
         
         with torch.no_grad():
