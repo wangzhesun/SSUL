@@ -9,8 +9,8 @@ LR=0.001 # 0.01# try decreasing learning rate
 THRESH=0.7
 FEWSHOT=True
 NUMSHOT=5
-#START=1
-START=0
+START=1
+#START=0
 MEMORY=100 # [0 (for SSUL), 100 (for SSUL-M)]
 
 ##### few shot step 0
