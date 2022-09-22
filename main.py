@@ -1162,6 +1162,7 @@ def main(opts, seed):
             #########################################################################
             print('print image size: ')
             print(images.shape)
+            print(type(images))
             #########################################################################
 
             outputs = model(images)
