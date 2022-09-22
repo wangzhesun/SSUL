@@ -196,6 +196,14 @@ class COCOSegmentation(data.Dataset):
         # COCO_PATH = os.path.join(self.root, "COCO2017")
         COCO_PATH = self.root
         self.target_cls = tasks.get_tasks('coco', self.task, cil_step)
+
+        ################################################################
+        print('current step: ')
+        print(cil_step)
+        print('print target class: ')
+        print(self.target_cls)
+        ################################################################
+
         self.target_cls += [255]  # including ignore index (255)
 
         ########################################################################################
