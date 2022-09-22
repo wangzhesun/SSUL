@@ -1159,6 +1159,11 @@ def main(opts, seed):
         """ forwarding and optimization """
         with torch.cuda.amp.autocast(enabled=opts.amp):
 
+            #########################################################################
+            print('print image size: ')
+            print(images.shape)
+            #########################################################################
+
             outputs = model(images)
 
             if opts.pseudo and opts.curr_step > 0:
