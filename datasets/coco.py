@@ -198,10 +198,10 @@ class COCOSegmentation(data.Dataset):
         self.target_cls = tasks.get_tasks('coco', self.task, cil_step)
 
         ################################################################
-        print('current step: ')
-        print(cil_step)
-        print('print target class: ')
-        print(self.target_cls)
+        # print('current step: ')
+        # print(cil_step)
+        # print('print target class: ')
+        # print(self.target_cls)
         ################################################################
 
         self.target_cls += [255]  # including ignore index (255)
@@ -266,13 +266,20 @@ class COCOSegmentation(data.Dataset):
 
                 idxs = final_index_list
 
-                while len(idxs) < 100:
-                    if self.num_shot == 5:
-                        idxs = idxs * 4
-                    elif self.num_shot == 1:
-                        idxs = idxs * 20
-                    else:
-                        idxs = idxs * 5
+                #############################################################
+                # while len(idxs) < 500:
+                #     if self.num_shot == 5:
+                #         idxs = idxs * 4
+                #     elif self.num_shot == 1:
+                #         idxs = idxs * 20
+                #     else:
+                #         idxs = idxs * 5
+
+                if self.num_shot == 5:
+                    idxs = idxs * 20
+                elif self.num_shot == 1:
+                    idxs = idxs * 100
+                #############################################################
 
                 self.dataset = Subset(dataset, idxs)
                 #######################################
