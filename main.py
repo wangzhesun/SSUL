@@ -968,13 +968,17 @@ def main(opts, seed):
     mode = model.to(device)
     mode.train()
 
-    if opts.curr_step > 0:
-        model_prev = nn.DataParallel(model_prev)
-        model_prev = model_prev.to(device)
-        model_prev.eval()
+    #########################################################################
 
-        if opts.mem_size > 0:
-            memory_sampling_balanced(opts, model_prev)
+    # if opts.curr_step > 0:
+    #     model_prev = nn.DataParallel(model_prev)
+    #     model_prev = model_prev.to(device)
+    #     model_prev.eval()
+    #
+    #     if opts.mem_size > 0:
+    #         memory_sampling_balanced(opts, model_prev)
+
+    #########################################################################
 
         # Setup dataloader
     if not opts.crop_val:
@@ -1041,11 +1045,12 @@ def main(opts, seed):
     ##################################################################################
 
 
-
-    if opts.curr_step > 0 and opts.mem_size > 0:
-        memory_loader = data.DataLoader(
-            dataset_dict['memory'], batch_size=opts.batch_size, shuffle=True, num_workers=4,
-            pin_memory=True, drop_last=True)
+    #############################################################################
+    # if opts.curr_step > 0 and opts.mem_size > 0:
+    #     memory_loader = data.DataLoader(
+    #         dataset_dict['memory'], batch_size=opts.batch_size, shuffle=True, num_workers=4,
+    #         pin_memory=True, drop_last=True)
+    #########################################################################
 
     total_itrs = opts.train_epoch * len(train_loader)
 
@@ -1130,22 +1135,24 @@ def main(opts, seed):
         labels = labels.to(device, dtype=torch.long, non_blocking=True)
         sal_maps = sal_maps.to(device, dtype=torch.long, non_blocking=True)
 
-        """ memory """
-        if opts.curr_step > 0 and opts.mem_size > 0:
-            try:
-                m_images, m_labels, m_sal_maps, _ = mem_iter.next()
-            except:
-                mem_iter = iter(memory_loader)
-                m_images, m_labels, m_sal_maps, _ = mem_iter.next()
-
-            m_images = m_images.to(device, dtype=torch.float32, non_blocking=True)
-            m_labels = m_labels.to(device, dtype=torch.long, non_blocking=True)
-            m_sal_maps = m_sal_maps.to(device, dtype=torch.long, non_blocking=True)
-
-            rand_index = torch.randperm(opts.batch_size)[:opts.batch_size // 2].cuda()
-            images[rand_index, ...] = m_images[rand_index, ...]
-            labels[rand_index, ...] = m_labels[rand_index, ...]
-            sal_maps[rand_index, ...] = m_sal_maps[rand_index, ...]
+        #########################################################################
+        # """ memory """
+        # if opts.curr_step > 0 and opts.mem_size > 0:
+        #     try:
+        #         m_images, m_labels, m_sal_maps, _ = mem_iter.next()
+        #     except:
+        #         mem_iter = iter(memory_loader)
+        #         m_images, m_labels, m_sal_maps, _ = mem_iter.next()
+        #
+        #     m_images = m_images.to(device, dtype=torch.float32, non_blocking=True)
+        #     m_labels = m_labels.to(device, dtype=torch.long, non_blocking=True)
+        #     m_sal_maps = m_sal_maps.to(device, dtype=torch.long, non_blocking=True)
+        #
+        #     rand_index = torch.randperm(opts.batch_size)[:opts.batch_size // 2].cuda()
+        #     images[rand_index, ...] = m_images[rand_index, ...]
+        #     labels[rand_index, ...] = m_labels[rand_index, ...]
+        #     sal_maps[rand_index, ...] = m_sal_maps[rand_index, ...]
+        #########################################################################
 
         # print('1')
 
