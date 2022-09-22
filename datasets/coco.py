@@ -340,13 +340,15 @@ class COCOSegmentation(data.Dataset):
         # assert (len(self.images) == len(self.masks))
         #####################################################################
         ##########################################################################
+        print('print target class: ')
+        print(self.target_cls)
         if image_set == 'train':
             distinct_label = torch.tensor([]).float()
 
             for idx in range(len(self.dataset)):
                 img, target_tensor, img_fname = self.dataset[idx]
                 # gt = np.where(True, gt, 0)
-                target_tensor = np.where(np.isin(target_tensor, self.target_cls), target_tensor, 0)
+                # target_tensor = np.where(np.isin(target_tensor, self.target_cls), target_tensor, 0)
 
 
             # for step, (img, label, _, _) in enumerate(train_loader):
