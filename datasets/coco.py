@@ -266,11 +266,11 @@ class COCOSegmentation(data.Dataset):
 
                 idxs = final_index_list
 
-                while len(idxs) < opts.batch_size:
+                while len(idxs) < 100:
                     if self.num_shot == 5:
-                        idxs = idxs * 20
+                        idxs = idxs * 4
                     elif self.num_shot == 1:
-                        idxs = idxs * 100
+                        idxs = idxs * 20
                     else:
                         idxs = idxs * 5
 
