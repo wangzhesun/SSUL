@@ -340,25 +340,28 @@ class COCOSegmentation(data.Dataset):
         # assert (len(self.images) == len(self.masks))
         #####################################################################
         ##########################################################################
-        distinct_label = torch.tensor([]).float()
+        if image_set == 'train':
+            distinct_label = torch.tensor([]).float()
 
-        for idx in range(len(self.dataset)):
-            img, target_tensor, img_fname = self.dataset[idx]
+            for idx in range(len(self.dataset)):
+                img, target_tensor, img_fname = self.dataset[idx]
+                # gt = np.where(True, gt, 0)
+                target_tensor = np.where(np.isin(target_tensor, self.target_cls), target_tensor, 0)
 
 
-        # for step, (img, label, _, _) in enumerate(train_loader):
-            # print(label.size())
-            # print(distinct_label.size())
-            unique_tmp = torch.unique(target_tensor)
-            # print(unique_tmp.size())
-            distinct_label = torch.concat((distinct_label, unique_tmp), 0)
-            # print(distinct_label.size())
-            distinct_label = torch.unique(distinct_label)
+            # for step, (img, label, _, _) in enumerate(train_loader):
+                # print(label.size())
+                # print(distinct_label.size())
+                unique_tmp = torch.unique(target_tensor)
+                # print(unique_tmp.size())
+                distinct_label = torch.concat((distinct_label, unique_tmp), 0)
+                # print(distinct_label.size())
+                distinct_label = torch.unique(distinct_label)
 
-        print('print distinct label in training dataset: ')
-        print(distinct_label)
-        print('total distinct classes is: ')
-        print(distinct_label.size())
+            print('print distinct label in training dataset in coco.py: ')
+            print(distinct_label)
+            print('total distinct classes is: ')
+            print(distinct_label.size())
 
         ##########################################################################
         ##########################################################################

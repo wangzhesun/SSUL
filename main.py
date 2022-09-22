@@ -1014,7 +1014,7 @@ def main(opts, seed):
         # print(distinct_label.size())
         distinct_label = torch.unique(distinct_label)
 
-    print('print distinct label in training dataset: ')
+    print('print distinct label in training dataset in main.py: ')
     print(distinct_label)
     print('total distinct classes is: ')
     print(distinct_label.size())
