@@ -362,8 +362,8 @@ class COCOSegmentation(data.Dataset):
 
         ##########################################################################
         ##########################################################################
-        # print('print ordering map:')
-        # print(self.ordering_map)
+        print('print ordering map:')
+        print(self.ordering_map)
         # print('print target class: ')
         # print(self.target_cls)
         ##########################################################################
