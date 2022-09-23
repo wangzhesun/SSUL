@@ -1267,7 +1267,11 @@ def main(opts, seed):
         print(f"...from {first_cls} to {len(class_iou) - 1} best/test_after_acc : %.6f" % np.mean(
             class_acc[first_cls:]))
 
-        if (opts.curr_step == 5):
+        if opts.dataset == 'coco' and opts.curr_step == 4:
+            new_base = np.mean(class_iou[:first_cls])
+            new_novel = np.mean(class_iou[first_cls:])
+            return new_base, new_novel
+        elif opts.curr_step == 5:
             new_base = np.mean(class_iou[:first_cls])
             new_novel = np.mean(class_iou[first_cls:])
             return new_base, new_novel
