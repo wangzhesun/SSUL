@@ -267,18 +267,18 @@ class COCOSegmentation(data.Dataset):
                 idxs = final_index_list
 
                 #############################################################
-                # while len(idxs) < 500:
-                #     if self.num_shot == 5:
-                #         idxs = idxs * 4
-                #     elif self.num_shot == 1:
-                #         idxs = idxs * 20
-                #     else:
-                #         idxs = idxs * 5
+                while len(idxs) < 20:
+                    if self.num_shot == 5:
+                        idxs = idxs * 4
+                    elif self.num_shot == 1:
+                        idxs = idxs * 20
+                    else:
+                        idxs = idxs * 5
 
-                if self.num_shot == 5:
-                    idxs = idxs * 20
-                elif self.num_shot == 1:
-                    idxs = idxs * 100
+                # if self.num_shot == 5:
+                #     idxs = idxs * 20
+                # elif self.num_shot == 1:
+                #     idxs = idxs * 100
                 #############################################################
 
                 self.dataset = Subset(dataset, idxs)
