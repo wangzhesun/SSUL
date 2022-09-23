@@ -1314,7 +1314,7 @@ if __name__ == '__main__':
                 opts.curr_step = step
                 # best_base, best_novel = main(opts, seed_list[i], best_base, best_novel)
                 new_base, new_novel = main(opts, seed_list[i])
-                if step == 5:
+                if step == 5 or (step == 4 and opts.dataset == 'coco'):
                     base_iou.append(new_base)
                     novel_iou.append(new_novel)
 
