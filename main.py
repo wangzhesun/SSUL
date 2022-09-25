@@ -824,6 +824,8 @@ def main(opts, seed):
 
     print("==============================================")
     print(f"  task : {opts.task}")
+    if opts.few_shot:
+        print(f"  number of shots : {opts.num_shot}")
     print(f"  step : {opts.curr_step}")
     print("  Device: %s" % device)
     print("  opts : ")
