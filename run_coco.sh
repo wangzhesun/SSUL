@@ -1,7 +1,7 @@
 DATA_ROOT=../data/COCO2017
 DATASET=coco
-TASK=15-1-split0
-FOLDING=0
+TASK=15-1-split1
+FOLDING=1
 EPOCH=50 #50
 BATCH=16 #32
 LOSS=bce_loss
@@ -29,7 +29,7 @@ python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 -
                 --pseudo_thresh ${THRESH} --freeze --bn_freeze --unknown --w_transfer --amp \
                 --mem_size ${MEMORY} \
                 --few_shot ${FEWSHOT} --num_shot ${NUMSHOT} --start_step ${START} \
-                --ckpt ./checkpoints/deeplabv3_resnet101_coco_15-1-split0_step_0_disjoint.pth \
+                --ckpt ./checkpoints/deeplabv3_resnet101_coco_15-1-split1_step_0_disjoint.pth \
 
 
 ###### non few shot
