@@ -306,7 +306,7 @@ class VOCSegmentation(data.Dataset):
                 elif opts.num_shot == 20:
                     file_names = file_names * 5
                 elif opts.num_shot == 40:
-                    file_names = file_names * 3
+                    file_names = file_names * 2
             ############################################################################################
 
         print("size of file names:" + str(len(file_names)))
