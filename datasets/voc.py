@@ -295,16 +295,18 @@ class VOCSegmentation(data.Dataset):
             #         file_names = file_names * 100
             #     else:
             #         file_names = file_names * 5
-            if opts.num_shot == 1:
-                file_names = file_names * 100
-            elif opts.num_shot == 5:
-                file_names = file_names * 20
-            elif opts.num_shot == 10:
-                file_names = file_names * 10
-            elif opts.num_shot == 20:
-                file_names = file_names * 5
-            elif opts.num_shot == 40:
-                file_names = file_names * 3
+
+            if opts.few_shot and image_set == "train" and cil_step > 0:
+                if opts.num_shot == 1:
+                    file_names = file_names * 100
+                elif opts.num_shot == 5:
+                    file_names = file_names * 20
+                elif opts.num_shot == 10:
+                    file_names = file_names * 10
+                elif opts.num_shot == 20:
+                    file_names = file_names * 5
+                elif opts.num_shot == 40:
+                    file_names = file_names * 3
             ############################################################################################
 
         print("size of file names:" + str(len(file_names)))
