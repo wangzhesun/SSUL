@@ -205,7 +205,8 @@ class ADESegmentation(data.Dataset):
                  image_set='train',
                  transform=None, 
                  cil_step=0, 
-                 mem_size=0):
+                 mem_size=0,
+                 seed=0):
 
         self.root=opts.data_root        
         self.task=opts.task
