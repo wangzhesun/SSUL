@@ -39,5 +39,5 @@ python main.py --data_root ${DATA_ROOT} --model deeplabv3_resnet101 --gpu_id 0 -
                 --dataset ${DATASET} --task ${TASK} --lr_policy poly --pseudo \
                 --pseudo_thresh ${THRESH} --freeze --bn_freeze --unknown --w_transfer --amp \
                 --mem_size ${MEMORY} \
-                --ckpt ./checkpoints/deeplabv3_resnet101_ade_100-5_disjoint.pth \
+                --ckpt ./checkpoints/deeplabv3_resnet101_ade_100-5_step_0_disjoint.pth \
                 --num_shot ${NUMSHOT} --start_step ${START}
