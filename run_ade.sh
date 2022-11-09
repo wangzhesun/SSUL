@@ -3,7 +3,7 @@ DATA_ROOT=../data/ADEChallengeData2016
 DATASET=ade
 TASK=100-5 # [15-1, 10-1, 19-1, 15-5, 5-3, 5-1, 2-1, 2-2] add split to task 15-1
 EPOCH=100 #50
-BATCH=13 #32
+BATCH=16 #32
 LOSS=bce_loss
 LR=0.05
 THRESH=0.7
@@ -11,7 +11,7 @@ FEWSHOT=True
 NUMSHOT=5
 #NUMSHOT=1
 #NUMSHOT=40
-START=1
+START=7
 #START=0
 MEMORY=300 #100 # [0 (for SSUL), 100 (for SSUL-M)]
 
