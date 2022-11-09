@@ -9,6 +9,7 @@ import sys
 import torch.utils.data as data
 import numpy as np
 import json
+import random
 
 import torch
 from PIL import Image
@@ -252,6 +253,45 @@ class ADESegmentation(data.Dataset):
                 
         else:
             file_names = get_dataset_list('ade', self.task, cil_step, image_set, self.overlap)
+            ############################################################################################
+            final_file_name = []
+            if opts.few_shot and image_set == "train" and cil_step > 0:
+                np.random.seed(seed)
+                random.seed(seed)
+                torch.manual_seed(seed)
+                for _ in range(opts.num_shot):
+                    idx = random.choice(file_names)
+                    while True:
+                        if idx not in final_file_name:
+                            final_file_name.append(idx)
+                            break
+                        else:
+                            idx = random.choice(file_names)
+            else:
+                final_file_name = file_names
+
+            file_names = final_file_name
+
+            # while len(file_names) < opts.batch_size:
+            #     if opts.num_shot == 5:
+            #         file_names = file_names * 20
+            #     elif opts.num_shot == 1:
+            #         file_names = file_names * 100
+            #     else:
+            #         file_names = file_names * 5
+
+            if opts.few_shot and image_set == "train" and cil_step > 0:
+                if opts.num_shot == 1:
+                    file_names = file_names * 100
+                elif opts.num_shot == 5:
+                    file_names = file_names * 20
+                elif opts.num_shot == 10:
+                    file_names = file_names * 10
+                elif opts.num_shot == 20:
+                    file_names = file_names * 5
+                elif opts.num_shot == 40:
+                    file_names = file_names * 2
+            ############################################################################################
 
         self.images = [os.path.join(image_dir, x + ".jpg") for x in file_names]
         self.masks = [os.path.join(mask_dir, x + ".png") for x in file_names]
