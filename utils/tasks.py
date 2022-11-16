@@ -350,22 +350,22 @@ def get_dataset_list(dataset, task, step, mode, overlap=True):
     else:
         #######################################################################################
         # voc dataset
-        # if task == '15-1-split0':
-        #     target_cls_old = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] + list(
-        #         range(1, target_cls[0]))
-        # elif task == '15-1-split1':
-        #     target_cls_old = [1, 2, 3, 4, 5, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] + list(
-        #         range(6, target_cls[0]))
-        # elif task == '15-1-split2':
-        #     target_cls_old = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20] + list(
-        #         range(11, target_cls[0]))
-        # elif task == '15-1-split3':
-        #     target_cls_old = list(range(1, target_cls[0]))
-        # else:
-        #     NotImplementedError
+        if task == '15-1-split0':
+            target_cls_old = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] + list(
+                range(1, target_cls[0]))
+        elif task == '15-1-split1':
+            target_cls_old = [1, 2, 3, 4, 5, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] + list(
+                range(6, target_cls[0]))
+        elif task == '15-1-split2':
+            target_cls_old = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20] + list(
+                range(11, target_cls[0]))
+        elif task == '15-1-split3':
+            target_cls_old = list(range(1, target_cls[0]))
+        else:
+            NotImplementedError
 
         # ade
-        target_cls_old = list(range(1, target_cls[0]))
+        # target_cls_old = list(range(1, target_cls[0]))
         #######################################################################################
         target_cls_cum = target_cls + target_cls_old + [0, 255]
 

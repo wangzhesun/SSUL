@@ -285,12 +285,12 @@ class ADESegmentation(data.Dataset):
                     file_names = file_names * 100
                 elif opts.num_shot == 5:
                     file_names = file_names * 20
-                elif opts.num_shot == 10:
-                    file_names = file_names * 10
-                elif opts.num_shot == 20:
-                    file_names = file_names * 5
-                elif opts.num_shot == 40:
-                    file_names = file_names * 2
+                # elif opts.num_shot == 10:
+                #     file_names = file_names * 10
+                # elif opts.num_shot == 20:
+                #     file_names = file_names * 5
+                # elif opts.num_shot == 40:
+                #     file_names = file_names * 2
             ############################################################################################
 
         self.images = [os.path.join(image_dir, x + ".jpg") for x in file_names]
